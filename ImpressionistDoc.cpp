@@ -14,7 +14,7 @@
 
 // Include individual brush headers here.
 #include "PointBrush.h"
-
+#include "TriangleBrush.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -45,6 +45,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new PointBrush( this, "Scattered Lines" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]	
 		= new PointBrush( this, "Scattered Circles" );
+	ImpBrush::c_pBrushes[BRUSH_TRIANGLES]
+		= new TriangleBrush(this, "Triangles");
 
 	// make one of the brushes current
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[0];

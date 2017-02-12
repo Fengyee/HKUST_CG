@@ -1,19 +1,19 @@
 #pragma once
 //
-// TriangleBrush.h
+// CircleBrush.h
 //
 // The header file for Point Brush. 
 //
 
-#ifndef TriangleBrush_H
-#define TriangleBrush_H
+#ifndef CIRCLEBRUSH_H
+#define CIRCLEBRUSH_H
 
 #include "ImpBrush.h"
 
-class TriangleBrush : public ImpBrush
+class CircleBrush : public ImpBrush
 {
 public:
-	TriangleBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
+	CircleBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
 
 	void BrushBegin(const Point source, const Point target);
 	void BrushMove(const Point source, const Point target);

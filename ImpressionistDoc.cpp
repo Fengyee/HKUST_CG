@@ -14,7 +14,8 @@
 
 // Include individual brush headers here.
 #include "PointBrush.h"
-#include "TriangleBrush.h"
+#include "CircleBrush.h"
+#include "LineBrush.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -36,17 +37,15 @@ ImpressionistDoc::ImpressionistDoc()
 
 	// Note: You should implement these 5 brushes.  They are set the same (PointBrush) for now
 	ImpBrush::c_pBrushes[BRUSH_LINES]				
-		= new PointBrush( this, "Lines" );
+		= new LineBrush( this, "Lines" );
 	ImpBrush::c_pBrushes[BRUSH_CIRCLES]				
-		= new PointBrush( this, "Circles" );
+		= new CircleBrush( this, "Circles" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_POINTS]	
 		= new PointBrush( this, "Scattered Points" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]		
 		= new PointBrush( this, "Scattered Lines" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]	
 		= new PointBrush( this, "Scattered Circles" );
-	ImpBrush::c_pBrushes[BRUSH_TRIANGLES]
-		= new TriangleBrush(this, "Triangles");
 
 	// make one of the brushes current
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[0];
@@ -85,6 +84,41 @@ void ImpressionistDoc::setBrushType(int type)
 int ImpressionistDoc::getSize()
 {
 	return m_pUI->getSize();
+}
+
+void ImpressionistDoc::setSize(int size)
+{
+	m_pUI->setSize(size);
+}
+
+int ImpressionistDoc::getLineWidth()
+{
+	return m_pUI->getLineWidth();
+}
+
+void ImpressionistDoc::setLineWidth(int width)
+{
+	m_pUI->setLineWidth(width);
+}
+
+int ImpressionistDoc::getLineAngle()
+{
+	return m_pUI->getLineAngle();
+}
+
+void ImpressionistDoc::setLineAngle(int angle)
+{
+	m_pUI->setLineAngle(angle);
+}
+
+float ImpressionistDoc::getAlpha()
+{
+	return m_pUI->getAlpha();
+}
+
+void ImpressionistDoc::setAlpha(float alpha)
+{
+	m_pUI->setAlpha(alpha);
 }
 
 //---------------------------------------------------------

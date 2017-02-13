@@ -8,6 +8,8 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "ScatteredCircleBrush.h"
+#include <math.h>
+#include <ctime>
 
 extern float frand();
 
@@ -39,13 +41,30 @@ void ScatteredCircleBrush::BrushMove(const Point source, const Point target)
 		printf("ScatteredCircleBrush::BrushMove  document is NULL\n");
 		return;
 	}
+	int size = pDoc->getSize();
+	int radius = size / 2;
+	GLfloat alpha = pDoc->getAlpha();
 
-	float alpha = pDoc->getAlpha();
+	
+	int number = rand() % 3 + 3;
+	//srand(time(NULL));
 
-	glBegin(GL_POINTS);
-	SetColor(source);
-	glVertex2d(target.x, target.y);
-	glEnd();
+	for (size_t i = 0; i < number; i++)
+	{
+		
+		int offset_x = rand() % size;
+		int offset_y = rand() % size;
+		glBegin(GL_POLYGON);
+		const Point s(source.x - radius + offset_x, source.y - radius + offset_y);
+		SetColor(s);
+		for (int i = 0; i < 360; i++)
+		{
+			float degInRad = i * M_PI / 180.0;
+			glVertex2f(s.x + cos(degInRad)*radius, s.y + sin(degInRad)*radius);
+		}
+		glEnd();
+	}
+	
 }
 
 void ScatteredCircleBrush::BrushEnd(const Point source, const Point target)

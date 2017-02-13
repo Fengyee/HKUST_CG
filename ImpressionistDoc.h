@@ -4,8 +4,8 @@
 // header file for Doc 
 //
 
-#ifndef ImpressionistDoc_h
-#define ImpressionistDoc_h
+#ifndef IMPRESSIONISTDOC_H
+#define IMPRESSIONISTDOC_H
 
 #include "impressionist.h"
 #include "bitmap.h"

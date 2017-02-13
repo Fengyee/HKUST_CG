@@ -45,6 +45,15 @@
     <ClCompile Include="LineBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ScatteredPointBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScatteredLineBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScatteredCircleBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h">
@@ -75,6 +84,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LineBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScatteredLineBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScatteredPointBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScatteredCircleBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

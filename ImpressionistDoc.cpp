@@ -81,6 +81,11 @@ void ImpressionistDoc::setBrushType(int type)
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[type];
 }
 
+void ImpressionistDoc::setBrushDirection(int type)
+{
+	m_nBrushDirection = type;
+}
+
 //---------------------------------------------------------
 // Returns the size of the brush.
 //---------------------------------------------------------

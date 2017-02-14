@@ -25,6 +25,7 @@ public:
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	void	setBrushType(int type);			// called by the UI to set the brushType
+	void	setBrushDirection(int type);
 	int		getSize();						// get the UI size
 	void	setSize(int size);				// set the UI size
 	int		getLineWidth();					// get the UI size
@@ -51,9 +52,15 @@ public:
 
 
 	// The current active brush.
-	ImpBrush*			m_pCurrentBrush;	
+	ImpBrush*			m_pCurrentBrush;
+
+	int m_nBrushDirection;
+
 	// Size of the brush.
 	int m_nSize;
+	
+	int m_nLineWidth;
+	int m_nAngle;
 
 	ImpressionistUI*	m_pUI;
 

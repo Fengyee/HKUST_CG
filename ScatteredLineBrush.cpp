@@ -8,6 +8,7 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "ScatteredLineBrush.h"
+#include "math.h"
 
 extern float frand();
 
@@ -24,9 +25,6 @@ void ScatteredLineBrush::BrushBegin(const Point source, const Point target)
 	int size = pDoc->getSize();
 
 
-
-	glPointSize((float)size);
-
 	BrushMove(source, target);
 }
 
@@ -41,11 +39,34 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 	}
 
 	float alpha = pDoc->getAlpha();
+	int size = pDoc->getSize();
+	int width = pDoc->getLineWidth();
+	double angle = pDoc->getLineAngle() * M_PI / 180.0;
 
-	glBegin(GL_POINTS);
-	SetColor(source);
-	glVertex2d(target.x, target.y);
-	glEnd();
+	int number = rand() % 3 + 3;
+	for (size_t i = 0; i < number; i++)
+	{
+		int offset_x = rand() % size;
+		int offset_y = rand() % size;
+		
+		//randomize the length of line
+		int percent_left = rand() % 100 + 1;
+		int percent_right = rand() % 100 + 1;
+		const Point s(source.x - size/2 + offset_x, source.y - size/2 + offset_y);
+		
+		GLfloat ax, ay, bx, by;
+		ax = s.x - sqrt((float)percent_left / 100) * size * cos(angle) / 2;
+		ay = s.y - sqrt((float)percent_left / 100) * size * sin(angle) / 2;
+		bx = s.x + sqrt((float)percent_right / 100) * size * cos(angle) / 2;
+		by = s.y + sqrt((float)percent_right / 100) * size * sin(angle) / 2;
+		glLineWidth(width);
+
+		glBegin(GL_LINES);
+		SetColor(s);
+		glVertex2f(ax, ay);
+		glVertex2f(bx, by);
+		glEnd();
+	}
 }
 
 void ScatteredLineBrush::BrushEnd(const Point source, const Point target)

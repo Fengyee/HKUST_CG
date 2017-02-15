@@ -79,6 +79,8 @@ void OriginalView::draw()
 		int start_y = indicator_y - 5 >= 0 ? indicator_y - 5 : 0;
 		int end_y = indicator_y + 6 >= m_pDoc->m_nHeight ? m_pDoc->m_nHeight : indicator_y + 6;
 
+		memset(indicator_preserve, 0, 3 * IND_X * IND_Y);
+
 		for (int b = 0; b < IND_Y; b++)
 		{
 			for (int a = 0; a < IND_X; a++)
@@ -90,9 +92,9 @@ void OriginalView::draw()
 					indicator_preserve[(a + b * IND_X) * 3] = point[0];
 					indicator_preserve[(a + b * IND_X) * 3 + 1] = point[1];
 					indicator_preserve[(a + b * IND_X) * 3 + 2] = point[2];
-					image[((start_x + a) + (start_y + b) * m_pDoc->m_nWidth) * 3] = 255;
-					image[((start_x + a) + (start_y + b) * m_pDoc->m_nWidth) * 3 + 1] = 0;
-					image[((start_x + a) + (start_y + b) * m_pDoc->m_nWidth) * 3 + 2] = 0;
+					image[((start_x + a) + (start_y - startrow + b) * m_pDoc->m_nWidth) * 3] = 255;
+					image[((start_x + a) + (start_y - startrow + b) * m_pDoc->m_nWidth) * 3 + 1] = 0;
+					image[((start_x + a) + (start_y - startrow + b) * m_pDoc->m_nWidth) * 3 + 2] = 0;
 				}
 			}
 		}
@@ -110,9 +112,9 @@ void OriginalView::draw()
 			{
 				if (start_x + a < end_x && start_y + b < end_y)
 				{
-					image[((start_x + a) + (start_y + b) * m_pDoc->m_nWidth) * 3] = indicator_preserve[(a + b * IND_X) * 3];
-					image[((start_x + a) + (start_y + b) * m_pDoc->m_nWidth) * 3 + 1] = indicator_preserve[(a + b * IND_X) * 3 + 1];
-					image[((start_x + a) + (start_y + b) * m_pDoc->m_nWidth) * 3 + 2] = indicator_preserve[(a + b * IND_X) * 3 + 2];
+					image[((start_x + a) + (start_y - startrow + b) * m_pDoc->m_nWidth) * 3] = indicator_preserve[(a + b * IND_X) * 3];
+					image[((start_x + a) + (start_y - startrow + b) * m_pDoc->m_nWidth) * 3 + 1] = indicator_preserve[(a + b * IND_X) * 3 + 1];
+					image[((start_x + a) + (start_y - startrow + b) * m_pDoc->m_nWidth) * 3 + 2] = indicator_preserve[(a + b * IND_X) * 3 + 2];
 				}
 			}
 		}

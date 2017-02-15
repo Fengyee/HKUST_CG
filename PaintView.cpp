@@ -101,6 +101,8 @@ void PaintView::draw()
 		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
 		Point target(coord.x, m_nWindowHeight - coord.y);
 		
+		// printf("start column: %d; Start row: %d", m_nStartCol, m_nStartRow);
+
 		// This is the event handler
 		switch (eventToDo) 
 		{

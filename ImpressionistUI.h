@@ -32,20 +32,27 @@ public:
 	// The FLTK widgets
 	Fl_Window*			m_mainWindow;
 	Fl_Menu_Bar*		m_menubar;
-								
+
 	PaintView*			m_paintView;
 	OriginalView*		m_origView;
 
-// for brush dialog
+	// for brush dialog
 	Fl_Window*			m_brushDialog;
 	Fl_Choice*			m_BrushTypeChoice;
 	Fl_Choice*			m_StrokeDirectionChoice;
+	Fl_Light_Button*	m_EdgeClippingButton;
+	Fl_Light_Button*	m_AnotherGradientButton;
+
 
 	Fl_Slider*			m_BrushSizeSlider;
 	Fl_Slider*			m_BrushLineWidthSlider;
 	Fl_Slider*			m_BrushLineAngleSlider;
 	Fl_Slider*			m_BrushAlphaSlider;
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Button*			m_SizeRandButton;
+	Fl_Button*			m_PaintButton;
+	Fl_Slider*          m_SpacingSlider;
+	Fl_Slider*			m_EdgeThresholdSlider;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -68,7 +75,7 @@ public:
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
-	// All attributes here
+									// All attributes here
 	int		m_nSize;
 	int		m_nLineWidth;
 	int		m_nLineAngle;
@@ -77,7 +84,7 @@ private:
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
-	static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE+1];
+	static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE + 1];
 	static Fl_Menu_Item		directionTypeMenu[NUM_DIRECTION_TYPE + 1];
 
 	static ImpressionistUI*	whoami(Fl_Menu_* o);

@@ -304,6 +304,17 @@ void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nAlpha = float(((Fl_Slider *)o)->value());
 }
 
+void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)
+{
+	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+	unsigned char* temp = pDoc->m_ucBitmap;
+	pDoc->m_ucBitmap = pDoc->m_ucPainting;
+	pDoc->m_ucPainting = temp;
+	
+	pDoc->m_pUI->m_paintView->refresh();
+	pDoc->m_pUI->m_origView->refresh();
+}
+
 //---------------------------------- per instance functions --------------------------------------
 
 //------------------------------------------------
@@ -409,7 +420,23 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
 	{ "&Clear Canvas",	FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
+	{ "&Colors...",		FL_ALT + 'k', 0 },
+	{ "&Paintly...",	FL_ALT + 'p', 0, 0, FL_MENU_DIVIDER },
+	{ "Load Edge Image...",		FL_ALT + 'e', 0 },
+	{ "Load Another Image...",	FL_ALT + 'a', 0, 0, FL_MENU_DIVIDER },
 	{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
+	{ 0 },
+
+	{ "&Display", 0, 0, 0, FL_SUBMENU},
+	{ "&Swap Paintings",	FL_CTRL + 'a', (Fl_Callback *)ImpressionistUI::cb_swap_image },
+	{ "&Original Image...",	FL_ALT + 'o', 0 },
+	{ "&Edge Image...",	FL_ALT + 'e',0 },
+	{ "&Another Image...",	FL_ALT + 'a', 0},
+	{ 0 },
+
+	{ "&Options", 0, 0, 0, FL_SUBMENU },
+	{ "&Faster",	FL_ALT + 'f', 0 },
+	{ "&Safter",	FL_ALT + 's',0 },
 	{ 0 },
 
 	{ "&Help",		0, 0, 0, FL_SUBMENU },
@@ -495,14 +522,6 @@ ImpressionistUI::ImpressionistUI() {
 	m_ClearCanvasButton->user_data((void*)(this));
 	m_ClearCanvasButton->callback(cb_clear_canvas_button);
 
-	m_EdgeClippingButton = new Fl_Light_Button(10, 200, 120, 25, "&Edge Clipping");
-
-	m_AnotherGradientButton = new Fl_Light_Button(240, 200, 150, 25, "&Another Gradient");
-
-	m_SpacingSlider = new Fl_Slider(10, 230, 120, 25, "Spacing");
-	m_SizeRandButton = new Fl_Light_Button(10, 230, 120, 25, "&Size Rand.");
-	m_EdgeThresholdSlider = new Fl_Slider(10, 260, 120, 25, "Edge Threshold");
-
 	// Add brush size slider to the dialog 
 	m_BrushSizeSlider = new Fl_Value_Slider(10, 80, 300, 20, "Size");
 	m_BrushSizeSlider->user_data((void*)(this));	// record self to be used by static callback functions
@@ -557,6 +576,39 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushAlphaSlider->align(FL_ALIGN_RIGHT);
 	m_BrushAlphaSlider->callback(cb_alphaSlides);
 
+	m_EdgeClippingButton = new Fl_Light_Button(10, 200, 120, 25, "&Edge Clipping");
+
+	m_AnotherGradientButton = new Fl_Light_Button(240, 200, 150, 25, "&Another Gradient");
+
+	m_SpacingSlider =  new Fl_Value_Slider(10, 240, 160, 25, "Spacing");
+	m_SpacingSlider->user_data((void*)(this));
+	m_SpacingSlider->type(FL_HOR_NICE_SLIDER);
+	m_SpacingSlider->labelfont(FL_COURIER);
+	m_SpacingSlider->labelsize(12);
+	m_SpacingSlider->minimum(1);
+	m_SpacingSlider->maximum(16);
+	m_SpacingSlider->step(1);
+	//m_SpacingSlider->value(m_nAlpha);
+	m_SpacingSlider->align(FL_ALIGN_RIGHT);
+	/*m_SpacingSlider->callback(cb_alphaSlides);*/
+
+	m_SizeRandButton = new Fl_Light_Button(230, 240, 100, 25, "&Size Rand.");
+	m_PaintButton = new Fl_Button(340, 240, 50, 25, "&Paint");
+
+	m_EdgeThresholdSlider = new Fl_Value_Slider(10, 275, 170, 25, "Edge Threshold");
+	m_EdgeThresholdSlider->user_data((void*)(this));
+	m_EdgeThresholdSlider->type(FL_HOR_NICE_SLIDER);
+	m_EdgeThresholdSlider->labelfont(FL_COURIER);
+	m_EdgeThresholdSlider->labelsize(12);
+	m_EdgeThresholdSlider->minimum(0);
+	m_EdgeThresholdSlider->maximum(500);
+	m_EdgeThresholdSlider->step(1);
+	//m_EdgeThresholdSlider->value(m_nAlpha);
+	m_EdgeThresholdSlider->align(FL_ALIGN_RIGHT);
+	/*m_EdgeThresholdSlider->callback(cb_alphaSlides);*/
+
+	m_DoItButton = new Fl_Button(340, 275, 50, 25, "&Do it");
+	
 	m_brushDialog->end();
 
 }

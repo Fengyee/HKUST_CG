@@ -53,6 +53,7 @@ public:
 	Fl_Button*			m_PaintButton;
 	Fl_Slider*          m_SpacingSlider;
 	Fl_Slider*			m_EdgeThresholdSlider;
+	Fl_Button*			m_DoItButton;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -104,6 +105,7 @@ private:
 	static void	cb_lineWidthSlides(Fl_Widget* o, void* v);
 	static void	cb_lineAngleSlides(Fl_Widget* o, void* v);
 	static void	cb_alphaSlides(Fl_Widget* o, void* v);
+	static void	cb_swap_image(Fl_Menu_* o, void* v);
 
 
 };

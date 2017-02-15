@@ -99,7 +99,7 @@ void PaintView::draw()
 		isAnEvent	= 0;	
 
 		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
-		Point target( coord.x, m_nWindowHeight - coord.y );
+		Point target(coord.x, m_nWindowHeight - coord.y);
 		
 		// This is the event handler
 		switch (eventToDo) 
@@ -189,7 +189,8 @@ int PaintView::handle(int event)
 
 	}
 
-
+	// printf("Source is %d, %d ; \n Target is %d, %d ;\n", source.x, source.y, target.x, target.y);
+	this->m_pDoc->m_pUI->m_origView->update_indicator(coord.x, m_pDoc->m_nHeight - coord.y);
 
 	return 1;
 }

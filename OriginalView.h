@@ -29,13 +29,14 @@ public:
 	void refresh();
 
 	void resizeWindow(int width, int height);
+	void update_indicator(int x, int y);
 
 	ImpressionistDoc*	m_pDoc;
 
 private:
 	int	m_nWindowWidth, 
 		m_nWindowHeight;
-
+	int indicator_x, indicator_y;
 };
 
 #endif

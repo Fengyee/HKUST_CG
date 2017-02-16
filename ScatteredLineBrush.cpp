@@ -11,7 +11,7 @@
 #include "math.h"
 #include <iostream>
 
-Point target_prev_s;
+Point source_prev_s;
 //enum direction {GRADIENT, SLIDER, BRUSH};
 extern float frand();
 
@@ -44,7 +44,7 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 	float alpha = pDoc->getAlpha();
 	int size = pDoc->getSize();
 	int width = pDoc->getLineWidth();
-	double angle = calcAngle(pDoc, target_prev_s, target);
+	double angle = calcAngle(pDoc, source_prev_s, source);
 
 	int number = rand() % 3 + 3;
 	for (size_t i = 0; i < number; i++)
@@ -56,12 +56,13 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 		int percent_left = rand() % 100 + 1;
 		int percent_right = rand() % 100 + 1;
 		const Point s(source.x - size/2 + offset_x, source.y - size/2 + offset_y);
-		
+		const Point t(target.x - size / 2 + offset_x, target.y - size / 2 + offset_y);
+
 		GLfloat ax, ay, bx, by;
-		ax = s.x - sqrt((float)percent_left / 100) * size * cos(angle) / 2;
-		ay = s.y - sqrt((float)percent_left / 100) * size * sin(angle) / 2;
-		bx = s.x + sqrt((float)percent_right / 100) * size * cos(angle) / 2;
-		by = s.y + sqrt((float)percent_right / 100) * size * sin(angle) / 2;
+		ax = t.x - sqrt((float)percent_left / 100) * size * cos(angle) / 2;
+		ay = t.y - sqrt((float)percent_left / 100) * size * sin(angle) / 2;
+		bx = t.x + sqrt((float)percent_right / 100) * size * cos(angle) / 2;
+		by = t.y + sqrt((float)percent_right / 100) * size * sin(angle) / 2;
 		glLineWidth(width);
 
 		glBegin(GL_LINES);
@@ -70,8 +71,8 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 		glVertex2f(bx, by);
 		glEnd();
 	}
-	target_prev_s.x = target.x;
-	target_prev_s.y = target.y;
+	source_prev_s.x = source.x;
+	source_prev_s.y = source.y;
 }
 
 void ScatteredLineBrush::BrushEnd(const Point source, const Point target)

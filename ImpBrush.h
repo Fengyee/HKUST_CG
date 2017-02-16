@@ -62,7 +62,7 @@ public:
 	char* BrushName( void );
 
 	//calculate the angle of line brush
-	double calcAngle(ImpressionistDoc* pDoc, const Point target_prev, const Point target);
+	double calcAngle(ImpressionistDoc* pDoc, const Point source_prev, const Point source);
 	
 	static int			c_nBrushCount;	// How many brushes we have,
 	static ImpBrush**	c_pBrushes;		// and what they are.

@@ -56,11 +56,12 @@ void ScatteredCircleBrush::BrushMove(const Point source, const Point target)
 		int offset_y = rand() % size;
 		glBegin(GL_POLYGON);
 		const Point s(source.x - radius + offset_x, source.y - radius + offset_y);
+		const Point t(target.x - radius + offset_x, target.y - radius + offset_y);
 		SetColor(s);
 		for (int i = 0; i < 360; i++)
 		{
 			float degInRad = i * M_PI / 180.0;
-			glVertex2f(s.x + cos(degInRad)*radius, s.y + sin(degInRad)*radius);
+			glVertex2f(t.x + cos(degInRad)*radius, t.y + sin(degInRad)*radius);
 		}
 		glEnd();
 	}

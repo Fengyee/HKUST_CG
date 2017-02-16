@@ -9,7 +9,10 @@
 #include "impressionistUI.h"
 #include "ScatteredLineBrush.h"
 #include "math.h"
+#include <iostream>
 
+Point target_prev_s;
+//enum direction {GRADIENT, SLIDER, BRUSH};
 extern float frand();
 
 ScatteredLineBrush::ScatteredLineBrush(ImpressionistDoc* pDoc, char* name) :
@@ -41,7 +44,7 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 	float alpha = pDoc->getAlpha();
 	int size = pDoc->getSize();
 	int width = pDoc->getLineWidth();
-	double angle = pDoc->getLineAngle() * M_PI / 180.0;
+	double angle = calcAngle(pDoc, target_prev_s, target);
 
 	int number = rand() % 3 + 3;
 	for (size_t i = 0; i < number; i++)
@@ -67,6 +70,8 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 		glVertex2f(bx, by);
 		glEnd();
 	}
+	target_prev_s.x = target.x;
+	target_prev_s.y = target.y;
 }
 
 void ScatteredLineBrush::BrushEnd(const Point source, const Point target)

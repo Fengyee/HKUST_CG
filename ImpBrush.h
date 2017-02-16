@@ -21,6 +21,14 @@ enum
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
+enum
+{
+	SLIDER_AND_RIGHT_MOUSE = 0,
+	GRADIENT,
+	BRUSH_DIRECTION,
+	NUM_DIRECTION_TYPE // Make sure this stays at the end!
+};
+
 
 class ImpressionistDoc; // Pre-declaring class
 
@@ -52,6 +60,9 @@ public:
 
 	// Return the name of the brush (not used in this version).
 	char* BrushName( void );
+
+	//calculate the angle of line brush
+	double calcAngle(ImpressionistDoc* pDoc, const Point target_prev, const Point target);
 	
 	static int			c_nBrushCount;	// How many brushes we have,
 	static ImpBrush**	c_pBrushes;		// and what they are.

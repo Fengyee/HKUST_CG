@@ -10,6 +10,7 @@
 #include "LineBrush.h"
 #include <math.h>
 
+Point target_prev;
 extern float frand();
 
 LineBrush::LineBrush(ImpressionistDoc* pDoc, char* name) :
@@ -41,7 +42,8 @@ void LineBrush::BrushMove(const Point source, const Point target)
 
 	int size = pDoc->getSize();
 	int width = pDoc->getLineWidth();
-	double angle = pDoc->getLineAngle() * M_PI / 180.0;
+	double angle = calcAngle(pDoc, target_prev, target);
+	//double angle = pDoc->getLineAngle() * M_PI / 180.0;
 	float alpha = pDoc->getAlpha();
 
 	GLfloat ax, ay, bx, by;
@@ -59,6 +61,9 @@ void LineBrush::BrushMove(const Point source, const Point target)
 	glVertex2f(bx, by);
 
 	glEnd();
+
+	target_prev.x = target.x;
+	target_prev.y = target.y;
 }
 
 void LineBrush::BrushEnd(const Point source, const Point target)

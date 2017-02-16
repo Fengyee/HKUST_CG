@@ -12,6 +12,7 @@
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <stdlib.h>
+#include <FL/fl_draw.H>
 
 class ImpressionistDoc;
 

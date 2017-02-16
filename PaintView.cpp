@@ -48,6 +48,11 @@ void PaintView::draw()
 	glDrawBuffer(GL_FRONT_AND_BACK);
 	#endif // !MESA
 
+	//printf("params: %d\t%d\t%d\t%d\n", x(), y(), m_nDrawWidth, m_nDrawHeight);
+	//fl_push_no_clip();
+	//fl_pop_clip();
+	//fl_push_clip(x(), y(), m_nDrawWidth, m_nDrawHeight);
+
 	if(!valid())
 	{
 
@@ -92,15 +97,24 @@ void PaintView::draw()
 
 	}
 
-	if ( m_pDoc->m_ucPainting && isAnEvent) 
+	//printf("x, y : (%d, %d)\n", coord.x - x(), coord.y - y());
+	bool outsideDrawRegion = coord.x >= m_nDrawWidth || coord.y >= m_nDrawHeight;
+
+	if ( !outsideDrawRegion && m_pDoc->m_ucPainting && isAnEvent) 
 	{
 
 		// Clear it after processing.
 		isAnEvent	= 0;	
 
-		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
-		Point target( coord.x, m_nWindowHeight - coord.y );
 		
+		
+
+		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
+		Point target(coord.x, m_nWindowHeight - coord.y);
+		
+		// printf("start column: %d; Start row: %d", m_nStartCol, m_nStartRow);
+
+
 		// This is the event handler
 		switch (eventToDo) 
 		{
@@ -139,6 +153,7 @@ void PaintView::draw()
 	glDrawBuffer(GL_BACK);
 	#endif // !MESA
 
+	//fl_pop_clip();
 }
 
 
@@ -189,7 +204,8 @@ int PaintView::handle(int event)
 
 	}
 
-
+	// printf("Source is %d, %d ; \n Target is %d, %d ;\n", source.x, source.y, target.x, target.y);
+	this->m_pDoc->m_pUI->m_origView->update_indicator(coord.x, m_pDoc->m_nHeight - coord.y);
 
 	return 1;
 }

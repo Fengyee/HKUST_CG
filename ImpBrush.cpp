@@ -55,7 +55,7 @@ void ImpBrush::SetColor (const Point source)
 
 }
 
-double ImpBrush::calcAngle(ImpressionistDoc* pDoc, const Point target_prev, const Point target)
+double ImpBrush::calcAngle(ImpressionistDoc* pDoc, const Point source_prev, const Point source)
 {
 	int d = pDoc->m_nBrushDirection;
 	double angle = pDoc->getLineAngle() * M_PI / 180.0;
@@ -75,7 +75,7 @@ double ImpBrush::calcAngle(ImpressionistDoc* pDoc, const Point target_prev, cons
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				memcpy(pixel_cur, pDoc->GetOriginalPixel(target.x - 1 + i, target.y - 1 + j), 3);
+				memcpy(pixel_cur, pDoc->GetOriginalPixel(source.x - 1 + i, source.y - 1 + j), 3);
 				//glReadPixels(source.x-1+i, source.y-1+j, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel_cur);
 				pixels_bw = (pixel_cur[0] + pixel_cur[1] + pixel_cur[2]) / 3;
 				x_conv = x_conv + (int)pixels_bw * filter_x[i][j];
@@ -92,7 +92,7 @@ double ImpBrush::calcAngle(ImpressionistDoc* pDoc, const Point target_prev, cons
 		break;
 
 	case BRUSH_DIRECTION:
-		angle = atan((float)(target.y - target_prev.y) / (float)(target.x - target_prev.x));
+		angle = atan((float)(source.y - source_prev.y) / (float)(source.x - source_prev.x));
 		//std::cout << angle << std::endl;
 		//std::cout << target.x << source_prev.x << std::endl;
 		//std::cout << target.y << source_prev.y << std::endl;

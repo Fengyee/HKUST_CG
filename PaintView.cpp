@@ -9,6 +9,7 @@
 #include "impressionistUI.h"
 #include "paintview.h"
 #include "ImpBrush.h"
+#include <cmath>
 
 
 #define LEFT_MOUSE_DOWN		1
@@ -27,6 +28,8 @@
 static int		eventToDo;
 static int		isAnEvent=0;
 static Point	coord;
+static Point right_mouse_source;
+static Point prev_right_mouse_source;
 
 PaintView::PaintView(int			x, 
 					 int			y, 
@@ -131,13 +134,40 @@ void PaintView::draw()
 			RestoreContent();
 			break;
 		case RIGHT_MOUSE_DOWN:
-
+			if (m_pDoc->m_nBrushDirection == SLIDER_AND_RIGHT_MOUSE) {
+				right_mouse_source.x = source.x;
+				right_mouse_source.y = source.y;
+				prev_right_mouse_source.x = right_mouse_source.x;
+				prev_right_mouse_source.y = right_mouse_source.y;
+			}
 			break;
 		case RIGHT_MOUSE_DRAG:
-
+			if (m_pDoc->m_nBrushDirection == SLIDER_AND_RIGHT_MOUSE) {
+				glLineWidth(1);
+				glBegin(GL_LINES);
+				glColor3f(1.0f, 0.0f, 0.0f);
+				glVertex2f(right_mouse_source.x, right_mouse_source.y);
+				glVertex2f(source.x, source.y);
+				glEnd();
+				glBegin(GL_LINES);
+				glColor3f(0.0f, 0.0f, 0.0f);
+				glVertex2f(right_mouse_source.x, right_mouse_source.y);
+				glVertex2f(prev_right_mouse_source.x, prev_right_mouse_source.y);
+				glEnd();
+				prev_right_mouse_source.x = source.x;
+				prev_right_mouse_source.y = source.y;
+			}
 			break;
 		case RIGHT_MOUSE_UP:
+			if (m_pDoc->m_nBrushDirection == SLIDER_AND_RIGHT_MOUSE) {
+				glBegin(GL_LINES);
+				glColor3f(0.0f, 0.0f, 0.0f);
+				glVertex2f(right_mouse_source.x, right_mouse_source.y);
+				glVertex2f(prev_right_mouse_source.x, prev_right_mouse_source.y);
+				glEnd();
 
+				m_pDoc->setLineAngle((int)((atan((float)(source.y - right_mouse_source.y) / (float)(source.x - right_mouse_source.x))) * 180 / M_PI));
+			}
 			break;
 
 		default:

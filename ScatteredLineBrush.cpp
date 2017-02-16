@@ -9,12 +9,62 @@
 #include "impressionistUI.h"
 #include "ScatteredLineBrush.h"
 #include "math.h"
+#include <iostream>
 
+enum direction {GRADIENT, SLIDER, BRUSH};
 extern float frand();
 
 ScatteredLineBrush::ScatteredLineBrush(ImpressionistDoc* pDoc, char* name) :
 	ImpBrush(pDoc, name)
 {
+}
+
+double ScatteredLineBrush::calcAngle(ImpressionistDoc* pDoc, const Point source, const Point target)
+{
+	direction d = GRADIENT;
+	double angle = pDoc->getLineAngle() * M_PI / 180.0;
+
+	int filter_x[3][3] = { { -1, 0, 1 },{ -2, 0, 2 },{ -1, 0, 1 } };
+	int filter_y[3][3] = { { 1, 2, 1 },{ 0, 0, 0 },{ -1, -2, -1 } };
+	GLubyte pixel_cur[4];
+	GLubyte pixels_bw;
+	int x_conv = 0;
+	int y_conv = 0;
+
+	switch (d)
+	{
+	case GRADIENT:
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				memcpy(pixel_cur, pDoc->GetOriginalPixel(source.x-1+i, source.y-1+j), 3);
+				//glReadPixels(source.x-1+i, source.y-1+j, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel_cur);
+				pixels_bw = (pixel_cur[0] + pixel_cur[1] + pixel_cur[2]) / 3;
+				x_conv = x_conv + (int)pixels_bw * filter_x[i][j];
+				y_conv = y_conv + (int)pixels_bw * filter_y[i][j];
+				//std::cout << (int)pixels_bw << filter_x[i][j] << filter_y[i][j] << std::endl;
+				//std::cout << x_conv << y_conv << std::endl;
+			}
+		}
+		angle = atan((float)(y_conv) / (float)(x_conv));
+		//std::cout << std::endl << angle << std::endl;
+		//std::cout << x_conv << std::endl;
+		//std::cout << y_conv << std::endl;
+		
+		break;
+	case SLIDER:
+		break;
+	case BRUSH:
+		angle = atan((float)(target.y - source.y) / (float)(target.x - source.x));
+		std::cout << angle << std::endl;
+		std::cout << target.x << source.x << std::endl;
+		std::cout << target.y << source.y << std::endl;
+		break;
+	default:
+		break;
+	}
+    
+	return angle;
 }
 
 void ScatteredLineBrush::BrushBegin(const Point source, const Point target)
@@ -41,7 +91,7 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 	float alpha = pDoc->getAlpha();
 	int size = pDoc->getSize();
 	int width = pDoc->getLineWidth();
-	double angle = pDoc->getLineAngle() * M_PI / 180.0;
+	double angle = calcAngle(pDoc, source, target);
 
 	int number = rand() % 3 + 3;
 	for (size_t i = 0; i < number; i++)

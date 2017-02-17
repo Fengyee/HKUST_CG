@@ -31,6 +31,7 @@ static Point	coord;
 static Point right_mouse_source;
 static Point prev_right_mouse_source;
 
+
 PaintView::PaintView(int			x, 
 					 int			y, 
 					 int			w, 
@@ -85,7 +86,7 @@ void PaintView::draw()
 
 	m_pPaintBitstart = m_pDoc->m_ucPainting + 
 		3 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
-
+	m_pUndoBitstart =  m_pDoc->m_ucPainting + 6 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
 	m_nDrawWidth	= drawWidth;
 	m_nDrawHeight	= drawHeight;
 
@@ -122,6 +123,7 @@ void PaintView::draw()
 		switch (eventToDo) 
 		{
 		case LEFT_MOUSE_DOWN:
+			SaveUndoContent();
 			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
 			break;
 		case LEFT_MOUSE_DRAG:
@@ -129,7 +131,7 @@ void PaintView::draw()
 			break;
 		case LEFT_MOUSE_UP:
 			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
-
+			
 			SaveCurrentContent();
 			RestoreContent();
 			break;
@@ -139,32 +141,30 @@ void PaintView::draw()
 				right_mouse_source.y = source.y;
 				prev_right_mouse_source.x = right_mouse_source.x;
 				prev_right_mouse_source.y = right_mouse_source.y;
+				SaveCurrentContent();
 			}
 			break;
 		case RIGHT_MOUSE_DRAG:
 			if (m_pDoc->m_nBrushDirection == SLIDER_AND_RIGHT_MOUSE) {
-				glLineWidth(1);
+				RestoreContent();
+				glLineWidth(2);
 				glBegin(GL_LINES);
 				glColor3f(1.0f, 0.0f, 0.0f);
 				glVertex2f(right_mouse_source.x, right_mouse_source.y);
 				glVertex2f(source.x, source.y);
 				glEnd();
-				glBegin(GL_LINES);
-				glColor3f(0.0f, 0.0f, 0.0f);
-				glVertex2f(right_mouse_source.x, right_mouse_source.y);
-				glVertex2f(prev_right_mouse_source.x, prev_right_mouse_source.y);
-				glEnd();
+				//glBegin(GL_LINES);
+				//glColor3f(0.0f, 0.0f, 0.0f);
+				//glVertex2f(right_mouse_source.x, right_mouse_source.y);
+				//glVertex2f(prev_right_mouse_source.x, prev_right_mouse_source.y);
+				//glEnd();
 				prev_right_mouse_source.x = source.x;
 				prev_right_mouse_source.y = source.y;
 			}
 			break;
 		case RIGHT_MOUSE_UP:
 			if (m_pDoc->m_nBrushDirection == SLIDER_AND_RIGHT_MOUSE) {
-				glBegin(GL_LINES);
-				glColor3f(0.0f, 0.0f, 0.0f);
-				glVertex2f(right_mouse_source.x, right_mouse_source.y);
-				glVertex2f(prev_right_mouse_source.x, prev_right_mouse_source.y);
-				glEnd();
+				RestoreContent();
 
 				m_pDoc->setLineAngle((int)((atan((float)(source.y - right_mouse_source.y) / (float)(source.x - right_mouse_source.x))) * 180 / M_PI));
 			}
@@ -268,6 +268,23 @@ void PaintView::SaveCurrentContent()
 				  m_pPaintBitstart );
 }
 
+void PaintView::SaveUndoContent() 
+{
+	// Tell openGL to read from the front buffer when capturing
+	// out paint strokes
+	glReadBuffer(GL_FRONT);
+
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glPixelStorei(GL_PACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
+
+	glReadPixels(0,
+		m_nWindowHeight - m_nDrawHeight,
+		m_nDrawWidth,
+		m_nDrawHeight,
+		GL_RGB,
+		GL_UNSIGNED_BYTE,
+		m_pUndoBitstart);
+}
 
 void PaintView::RestoreContent()
 {
@@ -285,4 +302,23 @@ void PaintView::RestoreContent()
 				  m_pPaintBitstart);
 
 //	glDrawBuffer(GL_FRONT);
+}
+
+void PaintView::RestoreUndoContent()
+{
+	std::cout << "undo paintview" << std::endl;
+	glDrawBuffer(GL_BACK);
+
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glRasterPos2i(0, m_nWindowHeight - m_nDrawHeight);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
+	glDrawPixels(m_nDrawWidth,
+		m_nDrawHeight,
+		GL_RGB,
+		GL_UNSIGNED_BYTE,
+		m_pUndoBitstart);
+	SaveCurrentContent();
+	RestoreContent();
 }

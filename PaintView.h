@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <FL/fl_draw.H>
 
+#include <iostream>
+
 class ImpressionistDoc;
 
 class PaintView : public Fl_Gl_Window
@@ -29,12 +31,17 @@ public:
 
 	void SaveCurrentContent();
 
+	void SaveUndoContent();
+
 	void RestoreContent();
+
+	void RestoreUndoContent();
 
 	ImpressionistDoc *m_pDoc;
 
 private:
 	GLvoid* m_pPaintBitstart;
+	GLvoid* m_pUndoBitstart;
 	int		m_nDrawWidth,
 			m_nDrawHeight,
 			m_nStartRow, 

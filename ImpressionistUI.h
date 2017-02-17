@@ -51,6 +51,7 @@ public:
 	Fl_Button*          m_ClearCanvasButton;
 	Fl_Button*			m_SizeRandButton;
 	Fl_Button*			m_PaintButton;
+	Fl_Button*			m_UndoButton;
 	Fl_Slider*          m_SpacingSlider;
 	Fl_Slider*			m_EdgeThresholdSlider;
 	Fl_Button*			m_DoItButton;
@@ -101,6 +102,7 @@ private:
 	static void	cb_brushChoice(Fl_Widget* o, void* v);
 	static void cb_StrokeDirectionChoice(Fl_Widget* o, void* v);
 	static void	cb_clear_canvas_button(Fl_Widget* o, void* v);
+	static void	cb_undo_button(Fl_Widget* o, void* v);
 	static void	cb_sizeSlides(Fl_Widget* o, void* v);
 	static void	cb_lineWidthSlides(Fl_Widget* o, void* v);
 	static void	cb_lineAngleSlides(Fl_Widget* o, void* v);

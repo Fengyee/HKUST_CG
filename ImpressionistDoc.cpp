@@ -251,6 +251,15 @@ int ImpressionistDoc::clearCanvas()
 	return 0;
 }
 
+int ImpressionistDoc::undoPainting()
+{
+	if (m_ucPainting)
+	{
+		m_pUI->m_paintView->RestoreUndoContent();
+		
+	}
+	return 0;
+}
 //------------------------------------------------------------------
 // Get the color of the pixel in the original image at coord x and y
 //------------------------------------------------------------------

@@ -56,10 +56,8 @@ public:
 	ImpBrush*			m_pCurrentBrush;
 
 	int m_nBrushDirection;
-
 	// Size of the brush.
 	int m_nSize;
-	
 	int m_nLineWidth;
 	int m_nAngle;
 

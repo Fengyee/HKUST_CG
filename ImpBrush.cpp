@@ -50,6 +50,10 @@ void ImpBrush::SetColor (const Point source)
 
 	memcpy(color, pDoc->GetOriginalPixel(source), 3);
 	color[3] = m_pDoc->getAlpha() * 255;
+	Fl_Color_Chooser* CC = pDoc->m_pUI->m_colorChooser;
+	color[0] *= CC->r();
+	color[1] *= CC->g();
+	color[2] *= CC->b();
 
 	glColor4ubv(color);
 

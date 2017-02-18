@@ -227,7 +227,7 @@ void ImpressionistUI::cb_exit(Fl_Menu_* o, void* v)
 {
 	whoami(o)->m_mainWindow->hide();
 	whoami(o)->m_brushDialog->hide();
-
+	whoami(o)->m_colorSelectorDialog->hide();
 }
 
 
@@ -320,6 +320,12 @@ void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)
 	pDoc->m_pUI->m_paintView->refresh();
 	pDoc->m_pUI->m_origView->refresh();
 }
+
+void ImpressionistUI::cb_color_selector(Fl_Menu_* o, void* v) {
+	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+	whoami(o)->m_colorSelectorDialog->show();
+}
+
 
 //---------------------------------- per instance functions --------------------------------------
 
@@ -426,7 +432,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
 	{ "&Clear Canvas",	FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
-	{ "&Colors...",		FL_ALT + 'k', 0 },
+	{ "&Colors...",		FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_color_selector },
 	{ "&Paintly...",	FL_ALT + 'p', 0, 0, FL_MENU_DIVIDER },
 	{ "Load Edge Image...",		FL_ALT + 'e', 0 },
 	{ "Load Another Image...",	FL_ALT + 'a', 0, 0, FL_MENU_DIVIDER },
@@ -621,4 +627,10 @@ ImpressionistUI::ImpressionistUI() {
 	
 	m_brushDialog->end();
 
+	m_colorSelectorDialog = new Fl_Window(240, 260, "Color Selector");
+
+	m_colorChooser = new Fl_Color_Chooser(10, 20, 220, 230, "Color Blending");
+	m_colorChooser->rgb(1.000, 1.000, 1.000);
+
+	m_colorSelectorDialog->end();
 }

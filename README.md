@@ -3,7 +3,7 @@
 ***
 ### To Do List: 
 
-- [ ] [Fengyee] Alpha Channel Implementation.
+- [x] Alpha Channel Implementation.
 
 - [ ] [Fengyee] To give your paintings more variety, add some additional brush types to the program. These brush strokes should be substantially different from those you are required to implement. You will get one whistle for each new brush (within reason).
 
@@ -13,7 +13,7 @@
 
 - [x]  Sometimes it is useful to use the contents of the painting window as the original image. Add a control to swap the contents of the painting window and the contents of the original image window.
 
-- [ ] [FENGYEE] Add controls that allow you to manipulate the color of the image. For example, you could implement independent scaling of the red, green, and blue channels.
+- [x] [FENGYEE] Add controls that allow you to manipulate the color of the image. For example, you could implement independent scaling of the red, green, and blue channels.
 
     * - [ ] Design a brush that selectively applies one or more filters such as blurring and sharpening.
 

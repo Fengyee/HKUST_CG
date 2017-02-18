@@ -31,6 +31,7 @@ ImpressionistDoc::ImpressionistDoc()
 	m_nWidth = -1;
 	m_ucBitmap = NULL;
 	m_ucPainting = NULL;
+	m_ucUndoBitstart = NULL;
 
 
 	// create one instance of each brush
@@ -210,8 +211,13 @@ int ImpressionistDoc::loadImage(char *iname)
 	// release old storage
 	if (m_ucBitmap) delete[] m_ucBitmap;
 	if (m_ucPainting) delete[] m_ucPainting;
+	if (m_ucUndoBitstart) delete[] m_ucUndoBitstart;
 
 	m_ucBitmap = data;
+
+	// allocate space for draw view (undo)
+	m_ucUndoBitstart = new unsigned char[width * height * 3];
+	memset(m_ucUndoBitstart, 0, width * height * 3);
 
 	// allocate space for draw view
 	m_ucPainting = new unsigned char[width*height * 3];
@@ -260,10 +266,14 @@ int ImpressionistDoc::clearCanvas()
 	if (m_ucPainting)
 	{
 		delete[] m_ucPainting;
+		delete[] m_ucUndoBitstart;
 
+		m_ucUndoBitstart = new unsigned char[m_nPaintWidth*m_nPaintHeight * 3];
+		memset(m_ucUndoBitstart, 0, m_nPaintWidth*m_nPaintHeight * 3);
 		// allocate space for draw view
 		m_ucPainting = new unsigned char[m_nPaintWidth*m_nPaintHeight * 3];
 		memset(m_ucPainting, 0, m_nPaintWidth*m_nPaintHeight * 3);
+
 
 		// refresh paint view as well	
 		m_pUI->m_paintView->refresh();

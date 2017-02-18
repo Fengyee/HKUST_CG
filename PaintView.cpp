@@ -84,9 +84,10 @@ void PaintView::draw()
 	int startrow = m_pDoc->m_nPaintHeight - (scrollpos.y + drawHeight);
 	if ( startrow < 0 ) startrow = 0;
 
+
 	m_pPaintBitstart = m_pDoc->m_ucPainting + 
 		3 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
-	m_pUndoBitstart =  m_pDoc->m_ucPainting + 6 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
+	
 	m_nDrawWidth	= drawWidth;
 	m_nDrawHeight	= drawHeight;
 
@@ -274,7 +275,7 @@ void PaintView::SaveUndoContent()
 {
 	// Tell openGL to read from the front buffer when capturing
 	// out paint strokes
-	glReadBuffer(GL_FRONT);
+/*	glReadBuffer(GL_FRONT);
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glPixelStorei(GL_PACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
@@ -286,6 +287,11 @@ void PaintView::SaveUndoContent()
 		GL_RGB,
 		GL_UNSIGNED_BYTE,
 		m_pUndoBitstart);
+		*/
+	if (m_pDoc->m_ucPainting) {
+		memcpy(m_pDoc->m_ucUndoBitstart, m_pPaintBitstart, m_pDoc->m_nPaintWidth * m_pDoc->m_nPaintHeight * 3);
+	}
+
 }
 
 void PaintView::RestoreContent()
@@ -308,19 +314,12 @@ void PaintView::RestoreContent()
 
 void PaintView::RestoreUndoContent()
 {
-	std::cout << "undo paintview" << std::endl;
-	glDrawBuffer(GL_BACK);
-
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glRasterPos2i(0, m_nWindowHeight - m_nDrawHeight);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
-	glDrawPixels(m_nDrawWidth,
-		m_nDrawHeight,
-		GL_RGB,
-		GL_UNSIGNED_BYTE,
-		m_pUndoBitstart);
-	SaveCurrentContent();
+	if (m_pDoc->m_ucUndoBitstart) {
+		memcpy(m_pPaintBitstart, m_pDoc->m_ucUndoBitstart, m_pDoc->m_nPaintWidth * m_pDoc->m_nPaintHeight * 3);
+		//std::cout << "finish memcpy" << std::endl;
+	}
 	RestoreContent();
+		
+	//SaveCurrentContent();
+	//RestoreContent();
 }

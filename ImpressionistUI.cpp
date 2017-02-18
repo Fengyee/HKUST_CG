@@ -407,7 +407,7 @@ int ImpressionistUI::getMosaicLevel()
 
 int ImpressionistUI::getSpacing()
 {
-	return m_nSpacing
+	return m_nSpacing;
 }
 
 //-------------------------------------------------

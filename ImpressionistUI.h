@@ -116,6 +116,7 @@ private:
 	static void	cb_lineAngleSlides(Fl_Widget* o, void* v);
 	static void	cb_alphaSlides(Fl_Widget* o, void* v);
 	static void cb_spacingSlider(Fl_Widget* o, void* v);
+	static void	cb_auto_paint(Fl_Widget* o, void* v);
 	static void	cb_swap_image(Fl_Menu_* o, void* v);
 	static void cb_color_selector(Fl_Menu_* o, void * v);
 	static void	cb_mosaicSlides(Fl_Widget* o, void* v);

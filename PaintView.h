@@ -37,6 +37,8 @@ public:
 
 	void RestoreUndoContent();
 
+	void autoPainting();
+
 	ImpressionistDoc *m_pDoc;
 
 private:

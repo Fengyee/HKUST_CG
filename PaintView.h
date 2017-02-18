@@ -41,7 +41,6 @@ public:
 
 private:
 	GLvoid* m_pPaintBitstart;
-	unsigned char* m_pUndoBitstart;
 	int		m_nDrawWidth,
 			m_nDrawHeight,
 			m_nStartRow, 

@@ -27,6 +27,7 @@ public:
 	int		undoPainting();
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	void	setBrushDirection(int type);
+
 	int		getSize();						
 	void	setSize(int size);				
 	int		getLineWidth();					
@@ -36,6 +37,8 @@ public:
 	float	getAlpha();							
 	void	setAlpha(float alpha);				
 	int		getMosasicLevel();
+	int		getSpacing();					// get the spacing of auto painting
+
 
 	char*	getImageName();					// get the current image name
 	
@@ -62,6 +65,9 @@ public:
 	int m_nLineWidth;
 	int m_nAngle;
 	int m_nMosaicLevel;
+
+	// Spacing of automatic painting
+	////int m_nSpacing;
 
 	ImpressionistUI*	m_pUI;
 

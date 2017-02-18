@@ -315,6 +315,11 @@ void ImpressionistUI::cb_mosaicSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nMosasiLevel = int(((Fl_Slider *)o)->value());
 }
 
+void ImpressionistUI::cb_spacingSlider(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nSpacing = float(((Fl_Slider *)o)->value());
+}
+
 void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)
 {
 	ImpressionistDoc *pDoc = whoami(o)->getDocument();
@@ -400,6 +405,11 @@ int ImpressionistUI::getMosaicLevel()
 	return m_nMosasiLevel;
 }
 
+int ImpressionistUI::getSpacing()
+{
+	return m_nSpacing
+}
+
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -434,6 +444,8 @@ void ImpressionistUI::setAlpha(float alpha)
 	if (alpha <= 1.00)
 		m_BrushAlphaSlider->value(m_nAlpha);
 }
+
+
 
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {

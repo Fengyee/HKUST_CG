@@ -178,6 +178,11 @@ void ImpressionistDoc::setAlpha(float alpha)
 	m_pUI->setAlpha(alpha);
 }
 
+int ImpressionistDoc::getSpacing()
+{
+	return m_pUI->getSpacing();
+}
+
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 

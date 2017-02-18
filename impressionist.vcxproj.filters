@@ -54,9 +54,6 @@
     <ClCompile Include="ScatteredCircleBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MosaicBrush.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h">
@@ -96,9 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScatteredCircleBrush.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MosaicBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

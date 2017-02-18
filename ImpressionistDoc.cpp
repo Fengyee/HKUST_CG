@@ -19,6 +19,7 @@
 #include "ScatteredCircleBrush.h"
 #include "ScatteredLineBrush.h"
 #include "ScatteredPointBrush.h"
+#include "MosaicBrush.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -49,6 +50,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new ScatteredLineBrush(this, "Scattered Lines");
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]
 		= new ScatteredCircleBrush(this, "Scattered Circles");
+	ImpBrush::c_pBrushes[BRUSH_MOSAIC]
+		= new MosaicBrush(this, "Mosaic");
 
 	// make one of the brushes current
 	m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -88,6 +91,7 @@ void ImpressionistDoc::setBrushType(int type)
 	m_pUI->m_StrokeDirectionChoice->deactivate();
 	m_pUI->m_EdgeClippingButton->deactivate();
 	m_pUI->m_AnotherGradientButton->deactivate();
+	m_pUI->m_MosaicSlider->deactivate();
 
 	switch (type)
 	{
@@ -108,6 +112,11 @@ void ImpressionistDoc::setBrushType(int type)
 		m_pUI->m_EdgeClippingButton->activate();
 		m_pUI->m_AnotherGradientButton->activate();
 		break;
+	case BRUSH_MOSAIC:
+		m_pUI->m_BrushSizeSlider->activate();
+		m_pUI->m_BrushAlphaSlider->activate();
+		m_pUI->m_MosaicSlider->activate();
+		break;
 	default:
 		break;
 	}
@@ -126,6 +135,13 @@ int ImpressionistDoc::getSize()
 {
 	return m_pUI->getSize();
 }
+
+
+int ImpressionistDoc::getMosasicLevel()
+{
+	return m_pUI->getMosaicLevel();
+}
+
 
 void ImpressionistDoc::setSize(int size)
 {

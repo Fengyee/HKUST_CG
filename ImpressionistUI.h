@@ -58,6 +58,7 @@ public:
 	Fl_Slider*          m_SpacingSlider;
 	Fl_Slider*			m_EdgeThresholdSlider;
 	Fl_Button*			m_DoItButton;
+	Fl_Slider*			m_MosaicSlider;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -76,6 +77,7 @@ public:
 	void				setLineAngle(int angle);
 	float				getAlpha();
 	void				setAlpha(float alpha);
+	int					getMosaicLevel();
 
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
@@ -86,6 +88,7 @@ private:
 	int		m_nLineAngle;
 	float	m_nAlpha;
 	int		m_nBrushDirection;
+	int		m_nMosasiLevel;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
@@ -112,6 +115,8 @@ private:
 	static void	cb_alphaSlides(Fl_Widget* o, void* v);
 	static void	cb_swap_image(Fl_Menu_* o, void* v);
 	static void cb_color_selector(Fl_Menu_* o, void * v);
+	static void	cb_mosaicSlides(Fl_Widget* o, void* v);
+
 };
 
 #endif

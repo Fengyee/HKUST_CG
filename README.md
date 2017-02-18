@@ -6,7 +6,7 @@
 - [x] Alpha Channel Implementation.
 
 - [ ] [Fengyee] To give your paintings more variety, add some additional brush types to the program. These brush strokes should be substantially different from those you are required to implement. You will get one whistle for each new brush (within reason).
-    - [ ] mosaic brush
+    - [x] mosaic brush
     - [ ] 
 
 - [x] The skeleton program allows the user to paint outside the boundary of the paint rectangle, then erases this region when the stroke is completed. Change this to clip brush strokes to the region as they're being painted.

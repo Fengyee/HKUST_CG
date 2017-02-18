@@ -25,6 +25,7 @@ public:
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	int		undoPainting();
+	void	autoPainting();					// called by the UI to start auto painting
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	void	setBrushDirection(int type);
 

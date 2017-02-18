@@ -291,6 +291,11 @@ int ImpressionistDoc::undoPainting()
 	}
 	return 0;
 }
+
+void ImpressionistDoc::autoPainting()
+{
+	m_pUI->m_paintView->autoPainting();
+}
 //------------------------------------------------------------------
 // Get the color of the pixel in the original image at coord x and y
 //------------------------------------------------------------------

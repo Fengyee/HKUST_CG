@@ -73,6 +73,7 @@ public:
 	void				setLineAngle(int angle);
 	float				getAlpha();
 	void				setAlpha(float alpha);
+	int					getSpacing();
 
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
@@ -83,6 +84,7 @@ private:
 	int		m_nLineAngle;
 	float	m_nAlpha;
 	int		m_nBrushDirection;
+	int		m_nSpacing;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
@@ -107,6 +109,7 @@ private:
 	static void	cb_lineWidthSlides(Fl_Widget* o, void* v);
 	static void	cb_lineAngleSlides(Fl_Widget* o, void* v);
 	static void	cb_alphaSlides(Fl_Widget* o, void* v);
+	static void cb_spacingSlider(Fl_Widget* o, void* v);
 	static void	cb_swap_image(Fl_Menu_* o, void* v);
 
 

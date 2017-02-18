@@ -35,6 +35,7 @@ public:
 	void	setLineAngle(int angle);			// set the UI size
 	float	getAlpha();							// get the UI size
 	void	setAlpha(float alpha);				// set the UI size
+	int		getSpacing();					// get the spacing of auto painting
 
 	char*	getImageName();					// get the current image name
 	
@@ -62,6 +63,9 @@ public:
 	
 	int m_nLineWidth;
 	int m_nAngle;
+
+	// Spacing of automatic painting
+	////int m_nSpacing;
 
 	ImpressionistUI*	m_pUI;
 

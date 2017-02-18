@@ -110,8 +110,11 @@ void PaintView::draw()
 		// Clear it after processing.
 		isAnEvent	= 0;	
 
-		
-		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glShadeModel(GL_FLAT);
+		glClearColor(0.0, 0.0, 0.0, 0.0);
+
 
 		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
 		Point target(coord.x, m_nWindowHeight - coord.y);
@@ -183,7 +186,6 @@ void PaintView::draw()
 	glDrawBuffer(GL_BACK);
 	#endif // !MESA
 
-	//fl_pop_clip();
 }
 
 

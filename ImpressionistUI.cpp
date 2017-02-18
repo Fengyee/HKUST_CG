@@ -227,7 +227,7 @@ void ImpressionistUI::cb_exit(Fl_Menu_* o, void* v)
 {
 	whoami(o)->m_mainWindow->hide();
 	whoami(o)->m_brushDialog->hide();
-
+	whoami(o)->m_colorSelectorDialog->hide();
 }
 
 
@@ -310,6 +310,11 @@ void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nAlpha = float(((Fl_Slider *)o)->value());
 }
 
+void ImpressionistUI::cb_mosaicSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nMosasiLevel = int(((Fl_Slider *)o)->value());
+}
+
 void ImpressionistUI::cb_spacingSlider(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_nSpacing = float(((Fl_Slider *)o)->value());
@@ -325,6 +330,12 @@ void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)
 	pDoc->m_pUI->m_paintView->refresh();
 	pDoc->m_pUI->m_origView->refresh();
 }
+
+void ImpressionistUI::cb_color_selector(Fl_Menu_* o, void* v) {
+	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+	whoami(o)->m_colorSelectorDialog->show();
+}
+
 
 //---------------------------------- per instance functions --------------------------------------
 
@@ -389,6 +400,11 @@ float ImpressionistUI::getAlpha()
 	return m_nAlpha;
 }
 
+int ImpressionistUI::getMosaicLevel()
+{
+	return m_nMosasiLevel;
+}
+
 int ImpressionistUI::getSpacing()
 {
 	return m_nSpacing
@@ -438,7 +454,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
 	{ "&Clear Canvas",	FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
-	{ "&Colors...",		FL_ALT + 'k', 0 },
+	{ "&Colors...",		FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_color_selector },
 	{ "&Paintly...",	FL_ALT + 'p', 0, 0, FL_MENU_DIVIDER },
 	{ "Load Edge Image...",		FL_ALT + 'e', 0 },
 	{ "Load Another Image...",	FL_ALT + 'a', 0, 0, FL_MENU_DIVIDER },
@@ -466,12 +482,13 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 
 // Brush choice menu definition
 Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
-	{ "Points",			FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_POINTS },
+	{ "Points",				FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_POINTS },
 	{ "Lines",				FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_LINES },
 	{ "Circles",			FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_CIRCLES },
 	{ "Scattered Points",	FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_POINTS },
 	{ "Scattered Lines",	FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_LINES },
 	{ "Scattered Circles",	FL_ALT + 'd', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES },
+	{ "Mosaic",				FL_CTRL + 'm', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_MOSAIC },
 	{ 0 }
 };
 
@@ -519,11 +536,12 @@ ImpressionistUI::ImpressionistUI() {
 	m_nLineWidth = 1;
 	m_nLineAngle = 0;
 	m_nAlpha = 1.00;
+	m_nMosasiLevel = 5;
 
 	m_nBrushDirection = SLIDER_AND_RIGHT_MOUSE;
 
 	// brush dialog definition
-	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
+	m_brushDialog = new Fl_Window(400, 355, "Brush Dialog");
 	// Add a brush type choice to the dialog
 	m_BrushTypeChoice = new Fl_Choice(50, 10, 150, 25, "&Brush");
 	m_BrushTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
@@ -631,6 +649,27 @@ ImpressionistUI::ImpressionistUI() {
 
 	m_DoItButton = new Fl_Button(340, 275, 50, 25, "&Do it");
 	
+	m_MosaicSlider = new Fl_Value_Slider(10, 310, 300, 20, "Mosaic Level");
+	m_MosaicSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_MosaicSlider->type(FL_HOR_NICE_SLIDER);
+	m_MosaicSlider->labelfont(FL_COURIER);
+	m_MosaicSlider->labelsize(12);
+	m_MosaicSlider->minimum(3);
+	m_MosaicSlider->maximum(8);
+	m_MosaicSlider->step(1);
+	m_MosaicSlider->value(m_nMosasiLevel);
+	m_MosaicSlider->align(FL_ALIGN_RIGHT);
+	m_MosaicSlider->callback(cb_mosaicSlides);
+	m_MosaicSlider->deactivate();
+
+	// End of brush dialog
 	m_brushDialog->end();
 
+	// Color selector dialog 
+	m_colorSelectorDialog = new Fl_Window(240, 260, "Color Selector");
+
+	m_colorChooser = new Fl_Color_Chooser(10, 20, 220, 230, "Color Blending");
+	m_colorChooser->rgb(1.000, 1.000, 1.000);
+
+	m_colorSelectorDialog->end();
 }

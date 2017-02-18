@@ -27,15 +27,18 @@ public:
 	int		undoPainting();
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	void	setBrushDirection(int type);
-	int		getSize();						// get the UI size
-	void	setSize(int size);				// set the UI size
-	int		getLineWidth();					// get the UI size
-	void	setLineWidth(int width);			// set the UI size
-	int		getLineAngle();					// get the UI size
-	void	setLineAngle(int angle);			// set the UI size
-	float	getAlpha();							// get the UI size
-	void	setAlpha(float alpha);				// set the UI size
+
+	int		getSize();						
+	void	setSize(int size);				
+	int		getLineWidth();					
+	void	setLineWidth(int width);		
+	int		getLineAngle();					
+	void	setLineAngle(int angle);			
+	float	getAlpha();							
+	void	setAlpha(float alpha);				
+	int		getMosasicLevel();
 	int		getSpacing();					// get the spacing of auto painting
+
 
 	char*	getImageName();					// get the current image name
 	
@@ -57,12 +60,11 @@ public:
 	ImpBrush*			m_pCurrentBrush;
 
 	int m_nBrushDirection;
-
 	// Size of the brush.
 	int m_nSize;
-	
 	int m_nLineWidth;
 	int m_nAngle;
+	int m_nMosaicLevel;
 
 	// Spacing of automatic painting
 	////int m_nSpacing;

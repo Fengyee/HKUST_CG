@@ -18,6 +18,7 @@
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Multiline_Input.H>
+#include <FL/Fl_Color_Chooser.H>
 
 #include "Impressionist.h"
 #include "OriginalView.h"
@@ -38,11 +39,13 @@ public:
 
 	// for brush dialog
 	Fl_Window*			m_brushDialog;
+	Fl_Window*			m_colorSelectorDialog;
 	Fl_Choice*			m_BrushTypeChoice;
 	Fl_Choice*			m_StrokeDirectionChoice;
 	Fl_Light_Button*	m_EdgeClippingButton;
 	Fl_Light_Button*	m_AnotherGradientButton;
 
+	Fl_Color_Chooser*	m_colorChooser;
 
 	Fl_Slider*			m_BrushSizeSlider;
 	Fl_Slider*			m_BrushLineWidthSlider;
@@ -55,6 +58,7 @@ public:
 	Fl_Slider*          m_SpacingSlider;
 	Fl_Slider*			m_EdgeThresholdSlider;
 	Fl_Button*			m_DoItButton;
+	Fl_Slider*			m_MosaicSlider;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -73,6 +77,7 @@ public:
 	void				setLineAngle(int angle);
 	float				getAlpha();
 	void				setAlpha(float alpha);
+	int					getMosaicLevel();
 	int					getSpacing();
 
 private:
@@ -84,6 +89,7 @@ private:
 	int		m_nLineAngle;
 	float	m_nAlpha;
 	int		m_nBrushDirection;
+	int		m_nMosasiLevel;
 	int		m_nSpacing;
 
 	// Static class members
@@ -111,7 +117,8 @@ private:
 	static void	cb_alphaSlides(Fl_Widget* o, void* v);
 	static void cb_spacingSlider(Fl_Widget* o, void* v);
 	static void	cb_swap_image(Fl_Menu_* o, void* v);
-
+	static void cb_color_selector(Fl_Menu_* o, void * v);
+	static void	cb_mosaicSlides(Fl_Widget* o, void* v);
 
 };
 

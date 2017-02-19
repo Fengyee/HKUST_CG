@@ -41,6 +41,7 @@ public:
 	void	setAlpha(float alpha);				
 	int		getMosasicLevel();
 	int		getSpacing();					// get the spacing of auto painting
+	int		getRand();
 
 	char*	getImageName();					// get the current image name
 	

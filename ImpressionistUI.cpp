@@ -298,6 +298,14 @@ void ImpressionistUI::cb_auto_paint(Fl_Widget* o, void* v)
 
 	pDoc->autoPainting();
 }
+
+void ImpressionistUI::cb_size_rand(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
+//	if (ImpressionistUI::getRand() == 0)
+//	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
+	printf("%d", int(((Fl_Light_Button *)o)->value()));
+}
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
 // slider
@@ -439,6 +447,11 @@ int ImpressionistUI::getSpacing()
 	return m_nSpacing;
 }
 
+int ImpressionistUI::getRand()
+{
+	return m_nRand;
+}
+
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -474,6 +487,11 @@ void ImpressionistUI::setAlpha(float alpha)
 		m_BrushAlphaSlider->value(m_nAlpha);
 }
 
+void ImpressionistUI::setRand(int rand)
+{
+	if (rand == 0 || rand == 1)
+		m_SizeRandButton->value(m_nRand);
+}
 
 
 // Main menu definition
@@ -571,6 +589,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_nAlpha = 1.00;
 	m_nMosasiLevel = 5;
 	m_nSpacing = 1;
+	m_nRand = 0;
 
 	m_nBrushDirection = SLIDER_AND_RIGHT_MOUSE;
 
@@ -667,6 +686,10 @@ ImpressionistUI::ImpressionistUI() {
 	m_SpacingSlider->callback(cb_spacingSlider);
 
 	m_SizeRandButton = new Fl_Light_Button(230, 240, 100, 25, "&Size Rand.");
+	m_SizeRandButton->user_data((void*)(this));
+	m_SizeRandButton->value(m_nRand);
+	m_SizeRandButton->callback(cb_size_rand);
+
 	m_PaintButton = new Fl_Button(340, 240, 50, 25, "&Paint");
 	m_PaintButton->user_data((void*)(this));
 	m_PaintButton->callback(cb_auto_paint);

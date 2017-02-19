@@ -193,7 +193,10 @@ int ImpressionistDoc::getSpacing()
 	return m_pUI->getSpacing();
 }
 
-
+int ImpressionistDoc::getRand()
+{
+	return m_pUI->getRand();
+}
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 

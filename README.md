@@ -22,8 +22,6 @@
     - [ ] Design a brush that selectively applies one or more filters such as blurring and sharpening.
 
         - [x]  [ZhaoLucen] Add an undo feature with at least one level of undo so that you can try a brush and decide to undo its effect on the canvas. This comes in very handy for experimenting with brush and filtering effects.
-		- [ ] Optimization of performance
-
 
 - [ ]  Add the ability to dissolve one image into another.
 
@@ -36,7 +34,7 @@
 - [ ]  [ZhaoLucen] It can be time-consuming to paint an image manually. Add a feature so that a whole painting can be created automatically. The user should only have to specify a brush type, size, and angle to use. Then the program should automatically paint brush strokes over the entire image, using a randomized brush order and varying the brush attributes slightly as it goes (to increase realism).
 	- [x] Normal auto-painting
 	- [ ] Randomized auto-painting
-- [ ]  At times, you may want the brush strokes to follow the gradient of a different image than the base image. Add a button(s) that will cause the direction of brush strokes to be automatically determined from a user specified image.
+- [ ] [ZhaoLucen] At times, you may want the brush strokes to follow the gradient of a different image than the base image. Add a button(s) that will cause the direction of brush strokes to be automatically determined from a user specified image.
 
 - [ ]  [Fengyee] The "accuracy" of the painting can be also be improved by clipping long brush strokes to edges in the image. Allow the user to load a black-and-white image that represents the edges in the picture. Then add a checkbox so that the user can turn on edge-clipping, which will automatically clip brush strokes at edges in the image.
 

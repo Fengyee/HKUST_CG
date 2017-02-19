@@ -326,7 +326,7 @@ void ImpressionistUI::cb_mosaicSlides(Fl_Widget* o, void* v)
 
 void ImpressionistUI::cb_spacingSlider(Fl_Widget* o, void* v)
 {
-	((ImpressionistUI*)(o->user_data()))->m_nSpacing = float(((Fl_Slider *)o)->value());
+	((ImpressionistUI*)(o->user_data()))->m_nSpacing = int(((Fl_Slider *)o)->value());
 }
 
 void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)

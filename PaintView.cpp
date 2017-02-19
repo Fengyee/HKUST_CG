@@ -111,14 +111,13 @@ void PaintView::draw()
 
 	if ( !outsideDrawRegion && m_pDoc->m_ucPainting && isAnEvent) 
 	{
-
 		// Clear it after processing.
 		isAnEvent	= 0;	
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glShadeModel(GL_FLAT);
-		glClearColor(0.0, 0.0, 0.0, 0.0);
+		// glShadeModel(GL_FLAT);
+		// glClearColor(0.0, 0.0, 0.0, 0.0);
 
 
 		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
@@ -353,8 +352,8 @@ void PaintView::autoPainting()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glShadeModel(GL_FLAT);
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	// glShadeModel(GL_FLAT);
+	// glClearColor(0.0, 0.0, 0.0, 0.0);
 	for (std::vector<int>::iterator it = rand_order.begin(); it != rand_order.end(); ++it)
 	{
 		//std::cout << ' ' << *it;

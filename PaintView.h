@@ -37,11 +37,12 @@ public:
 
 	void RestoreUndoContent();
 
+	void autoPainting();
+
 	ImpressionistDoc *m_pDoc;
 
 private:
 	GLvoid* m_pPaintBitstart;
-	GLvoid* m_pUndoBitstart;
 	int		m_nDrawWidth,
 			m_nDrawHeight,
 			m_nStartRow, 

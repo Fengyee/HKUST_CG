@@ -10,6 +10,10 @@
 #include "paintview.h"
 #include "ImpBrush.h"
 #include <cmath>
+#include <algorithm>    
+#include <vector>
+#include <ctime>
+#include <cstdlib>
 
 
 #define LEFT_MOUSE_DOWN		1
@@ -84,9 +88,10 @@ void PaintView::draw()
 	int startrow = m_pDoc->m_nPaintHeight - (scrollpos.y + drawHeight);
 	if ( startrow < 0 ) startrow = 0;
 
+
 	m_pPaintBitstart = m_pDoc->m_ucPainting + 
 		3 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
-	m_pUndoBitstart =  m_pDoc->m_ucPainting + 6 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
+	
 	m_nDrawWidth	= drawWidth;
 	m_nDrawHeight	= drawHeight;
 
@@ -118,7 +123,9 @@ void PaintView::draw()
 
 		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
 		Point target(coord.x, m_nWindowHeight - coord.y);
-		
+		//std::cout << coord.x << ' ' << coord.y << std::endl;
+		//std::cout << m_nStartCol << ' ' << m_nEndRow << std::endl;
+		//std::cout << source.x << ' ' << source.y << std::endl;
 		// printf("start column: %d; Start row: %d", m_nStartCol, m_nStartRow);
 
 
@@ -274,7 +281,7 @@ void PaintView::SaveUndoContent()
 {
 	// Tell openGL to read from the front buffer when capturing
 	// out paint strokes
-	glReadBuffer(GL_FRONT);
+/*	glReadBuffer(GL_FRONT);
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glPixelStorei(GL_PACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
@@ -286,6 +293,11 @@ void PaintView::SaveUndoContent()
 		GL_RGB,
 		GL_UNSIGNED_BYTE,
 		m_pUndoBitstart);
+		*/
+	if (m_pDoc->m_ucPainting) {
+		memcpy(m_pDoc->m_ucUndoBitstart, m_pPaintBitstart, m_pDoc->m_nPaintWidth * m_pDoc->m_nPaintHeight * 3);
+	}
+
 }
 
 void PaintView::RestoreContent()
@@ -308,19 +320,56 @@ void PaintView::RestoreContent()
 
 void PaintView::RestoreUndoContent()
 {
-	std::cout << "undo paintview" << std::endl;
-	glDrawBuffer(GL_BACK);
+	if (m_pDoc->m_ucUndoBitstart) {
+		memcpy(m_pPaintBitstart, m_pDoc->m_ucUndoBitstart, m_pDoc->m_nPaintWidth * m_pDoc->m_nPaintHeight * 3);
+		//std::cout << "finish memcpy" << std::endl;
+	}
+	RestoreContent();
+		
+	//SaveCurrentContent();
+	//RestoreContent();
+}
 
-	glClear(GL_COLOR_BUFFER_BIT);
+void PaintView::autoPainting()
+{
+	std::srand(unsigned(std::time(0)));
+	std::vector<int> rand_order;
+	
+	//std::cout << "start auto painting" << std::endl;
+	int spacing = m_pDoc->getSpacing();
+	//std::cout << "spacing is " << spacing << std::endl;
+	int width = m_pDoc->m_nPaintWidth;
+	int height = m_pDoc->m_nPaintHeight;
 
-	glRasterPos2i(0, m_nWindowHeight - m_nDrawHeight);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
-	glDrawPixels(m_nDrawWidth,
-		m_nDrawHeight,
-		GL_RGB,
-		GL_UNSIGNED_BYTE,
-		m_pUndoBitstart);
+	// Generate a random vector for random painting order
+	for (int i = 0; i < (width * height); i = i + spacing)
+	{
+		rand_order.push_back(i);
+	}
+	std::random_shuffle(rand_order.begin(), rand_order.end());
+
+
+	glDrawBuffer(GL_FRONT_AND_BACK);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glShadeModel(GL_FLAT);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	for (std::vector<int>::iterator it = rand_order.begin(); it != rand_order.end(); ++it)
+	{
+		//std::cout << ' ' << *it;
+		int cor_x = *it % width;
+		int cor_y = *it / width;
+		//Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
+		//Point target(coord.x, m_nWindowHeight - coord.y);
+		Point auto_source(cor_x + m_nStartCol, m_nEndRow - cor_y);
+		Point auto_target(cor_x, m_nWindowHeight - cor_y);
+		m_pDoc->m_pCurrentBrush->BrushBegin(auto_source, auto_target);
+	}
 	SaveCurrentContent();
 	RestoreContent();
+//	m_nStartRow = startrow;
+//	m_nEndRow = startrow + drawHeight;
+//	m_nStartCol = scrollpos.x;
+//	m_nEndCol = m_nStartCol + drawWidth;
 }

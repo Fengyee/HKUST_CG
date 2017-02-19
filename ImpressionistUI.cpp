@@ -278,6 +278,8 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v)
 	pDoc->clearCanvas();
 }
 
+
+// Undo one previous step
 void ImpressionistUI::cb_undo_button(Fl_Widget* o, void* v)
 {
 	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
@@ -285,6 +287,13 @@ void ImpressionistUI::cb_undo_button(Fl_Widget* o, void* v)
 	pDoc->undoPainting();
 }
 
+// Start automatic painting
+void ImpressionistUI::cb_auto_paint(Fl_Widget* o, void* v)
+{
+	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
+
+	pDoc->autoPainting();
+}
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
 // slider
@@ -313,6 +322,11 @@ void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
 void ImpressionistUI::cb_mosaicSlides(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_nMosasiLevel = int(((Fl_Slider *)o)->value());
+}
+
+void ImpressionistUI::cb_spacingSlider(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nSpacing = float(((Fl_Slider *)o)->value());
 }
 
 void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)
@@ -400,6 +414,11 @@ int ImpressionistUI::getMosaicLevel()
 	return m_nMosasiLevel;
 }
 
+int ImpressionistUI::getSpacing()
+{
+	return m_nSpacing;
+}
+
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -434,6 +453,8 @@ void ImpressionistUI::setAlpha(float alpha)
 	if (alpha <= 1.00)
 		m_BrushAlphaSlider->value(m_nAlpha);
 }
+
+
 
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
@@ -525,6 +546,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_nLineAngle = 0;
 	m_nAlpha = 1.00;
 	m_nMosasiLevel = 5;
+	m_nSpacing = 1;
 
 	m_nBrushDirection = SLIDER_AND_RIGHT_MOUSE;
 
@@ -616,12 +638,14 @@ ImpressionistUI::ImpressionistUI() {
 	m_SpacingSlider->minimum(1);
 	m_SpacingSlider->maximum(16);
 	m_SpacingSlider->step(1);
-	//m_SpacingSlider->value(m_nAlpha);
+	m_SpacingSlider->value(m_nSpacing);
 	m_SpacingSlider->align(FL_ALIGN_RIGHT);
-	/*m_SpacingSlider->callback(cb_alphaSlides);*/
+	m_SpacingSlider->callback(cb_spacingSlider);
 
 	m_SizeRandButton = new Fl_Light_Button(230, 240, 100, 25, "&Size Rand.");
 	m_PaintButton = new Fl_Button(340, 240, 50, 25, "&Paint");
+	m_PaintButton->user_data((void*)(this));
+	m_PaintButton->callback(cb_auto_paint);
 
 	m_EdgeThresholdSlider = new Fl_Value_Slider(10, 275, 170, 25, "Edge Threshold");
 	m_EdgeThresholdSlider->user_data((void*)(this));

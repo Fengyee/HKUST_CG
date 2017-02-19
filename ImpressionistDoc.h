@@ -25,8 +25,10 @@ public:
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	int		undoPainting();
+	void	autoPainting();					// called by the UI to start auto painting
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	void	setBrushDirection(int type);
+
 	int		getSize();						
 	void	setSize(int size);				
 	int		getLineWidth();					
@@ -36,6 +38,8 @@ public:
 	float	getAlpha();							
 	void	setAlpha(float alpha);				
 	int		getMosasicLevel();
+	int		getSpacing();					// get the spacing of auto painting
+
 
 	char*	getImageName();					// get the current image name
 	
@@ -51,6 +55,7 @@ public:
 	// Bitmaps for original image and painting.
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
+	unsigned char*  m_ucUndoBitstart;
 
 
 	// The current active brush.
@@ -62,6 +67,9 @@ public:
 	int m_nLineWidth;
 	int m_nAngle;
 	int m_nMosaicLevel;
+
+	// Spacing of automatic painting
+	////int m_nSpacing;
 
 	ImpressionistUI*	m_pUI;
 

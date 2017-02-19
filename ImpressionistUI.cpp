@@ -254,6 +254,10 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 
 	int type = (int)v;
 
+	if (type == BRUSH_ALPHAMAPPED && pDoc->alphaMappedImageLoaded == false) {
+		fl_alert("Please load the alpha map image first. Brush type not changed");
+		return;
+	}
 	pDoc->setBrushType(type);
 }
 
@@ -326,7 +330,7 @@ void ImpressionistUI::cb_mosaicSlides(Fl_Widget* o, void* v)
 
 void ImpressionistUI::cb_spacingSlider(Fl_Widget* o, void* v)
 {
-	((ImpressionistUI*)(o->user_data()))->m_nSpacing = float(((Fl_Slider *)o)->value());
+	((ImpressionistUI*)(o->user_data()))->m_nSpacing = int(((Fl_Slider *)o)->value());
 }
 
 void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)
@@ -341,11 +345,27 @@ void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)
 }
 
 void ImpressionistUI::cb_color_selector(Fl_Menu_* o, void* v) {
-	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+	// ImpressionistDoc *pDoc = whoami(o)->getDocument();
 	whoami(o)->m_colorSelectorDialog->show();
 }
 
+void ImpressionistUI::cb_loadAlphaMappedImage(Fl_Menu_* o, void* v)
+{
+	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+	if (newfile != NULL) {
+		pDoc->loadAlphaMappedImage(newfile);
+	}
+}
 
+
+void ImpressionistUI::setAlphaMappedBrushState()
+{
+	if (m_pDoc->alphaMappedImageLoaded)
+	{
+		brushTypeMenu[7].activate();
+	}
+}
 //---------------------------------- per instance functions --------------------------------------
 
 //------------------------------------------------
@@ -466,6 +486,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Colors...",		FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_color_selector },
 	{ "&Paintly...",	FL_ALT + 'p', 0, 0, FL_MENU_DIVIDER },
 	{ "Load Edge Image...",		FL_ALT + 'e', 0 },
+	{ "Load Alphamap Image...",		FL_CTRL + 'b', (Fl_Callback *)ImpressionistUI::cb_loadAlphaMappedImage },
 	{ "Load Another Image...",	FL_ALT + 'a', 0, 0, FL_MENU_DIVIDER },
 	{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
 	{ 0 },
@@ -498,8 +519,11 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
 	{ "Scattered Lines",	FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_LINES },
 	{ "Scattered Circles",	FL_ALT + 'd', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES },
 	{ "Mosaic",				FL_CTRL + 'm', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_MOSAIC },
+	{ "Alpha Mapped",		FL_CTRL + 'e', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHAMAPPED },
 	{ 0 }
 };
+
+
 
 Fl_Menu_Item ImpressionistUI::directionTypeMenu[NUM_DIRECTION_TYPE + 1] = {
 	{ "Slider/Right Mouse",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_StrokeDirectionChoice, (void *)SLIDER_AND_RIGHT_MOUSE },
@@ -684,4 +708,6 @@ ImpressionistUI::ImpressionistUI() {
 	m_colorChooser->rgb(1.000, 1.000, 1.000);
 
 	m_colorSelectorDialog->end();
+
+	brushTypeMenu[7].deactivate();
 }

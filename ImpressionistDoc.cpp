@@ -20,6 +20,7 @@
 #include "ScatteredLineBrush.h"
 #include "ScatteredPointBrush.h"
 #include "MosaicBrush.h"
+#include "AlphaMappedBrush.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -32,6 +33,10 @@ ImpressionistDoc::ImpressionistDoc()
 	m_ucBitmap = NULL;
 	m_ucPainting = NULL;
 	m_ucUndoBitstart = NULL;
+	m_ucAlphaMappedImage = NULL;
+	m_nAlphaMappedImageWidth = -1;
+	m_nAlphaMappedImageHeight = -1;
+	alphaMappedImageLoaded = false;
 
 
 	// create one instance of each brush
@@ -53,6 +58,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new ScatteredCircleBrush(this, "Scattered Circles");
 	ImpBrush::c_pBrushes[BRUSH_MOSAIC]
 		= new MosaicBrush(this, "Mosaic");
+	ImpBrush::c_pBrushes[BRUSH_ALPHAMAPPED]
+		= new AlphaMappedBrush(this, "Alpha Mapped");
 
 	// make one of the brushes current
 	m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -118,6 +125,8 @@ void ImpressionistDoc::setBrushType(int type)
 		m_pUI->m_BrushAlphaSlider->activate();
 		m_pUI->m_MosaicSlider->activate();
 		break;
+	case BRUSH_ALPHAMAPPED:
+		m_pUI->m_BrushSizeSlider->activate();
 	default:
 		break;
 	}
@@ -184,6 +193,7 @@ int ImpressionistDoc::getSpacing()
 	return m_pUI->getSpacing();
 }
 
+
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 
@@ -236,6 +246,8 @@ int ImpressionistDoc::loadImage(char *iname)
 	m_pUI->m_paintView->resizeWindow(width, height);
 	m_pUI->m_paintView->refresh();
 
+	alphaMappedImageLoaded = false;
+	m_pUI->setAlphaMappedBrushState();
 
 	return 1;
 }
@@ -250,6 +262,47 @@ int ImpressionistDoc::saveImage(char *iname)
 {
 
 	writeBMP(iname, m_nPaintWidth, m_nPaintHeight, m_ucPainting);
+
+	return 1;
+}
+
+int ImpressionistDoc::loadAlphaMappedImage(char *iname)
+{
+	// try to open the image to read
+	unsigned char*	data;
+	int				width, height;
+
+	if ((data = readBMP(iname, width, height)) == NULL)
+	{
+		fl_alert("Can't load bitmap file");
+		return 0;
+	}
+
+	if (m_nWidth == -1) {
+		fl_alert("Load the original image first");
+		return 0;
+	}
+	if (m_nWidth != width || m_nHeight != height) {
+		fl_alert("Different dimension...");
+		return 0;
+	}
+
+	// reflect the fact of loading the new image
+	m_nAlphaMappedImageHeight = height;
+	m_nAlphaMappedImageWidth = width;
+
+	if (m_ucAlphaMappedImage)
+	{
+		delete[] m_ucAlphaMappedImage;
+	}
+	m_ucAlphaMappedImage = new unsigned char[width * height];
+
+	for (int i = 0; i < width * height; i++)
+	{
+		m_ucAlphaMappedImage[i] = ((int)data[i * 3] + (int)data[i * 3 + 1] + (int)data[i * 3 + 2]) / 3;
+	}
+	alphaMappedImageLoaded = true;
+	m_pUI->setAlphaMappedBrushState();
 
 	return 1;
 }

@@ -7,6 +7,8 @@
 
 - [ ] [Fengyee] To give your paintings more variety, add some additional brush types to the program. These brush strokes should be substantially different from those you are required to implement. You will get one whistle for each new brush (within reason).
     - [x] mosaic brush
+    - [ ] distortion brush
+    - [ ] Fluid style brush
     - [ ] 
 
 - [x] The skeleton program allows the user to paint outside the boundary of the paint rectangle, then erases this region when the stroke is completed. Change this to clip brush strokes to the region as they're being painted.
@@ -17,13 +19,13 @@
 
 - [x]  Add controls that allow you to manipulate the color of the image. For example, you could implement independent scaling of the red, green, and blue channels.
 
-    * - [ ] Design a brush that selectively applies one or more filters such as blurring and sharpening.
+    - [ ] Design a brush that selectively applies one or more filters such as blurring and sharpening.
 
-        * - [ ]  [ZhaoLucen] Add an undo feature with at least one level of undo so that you can try a brush and decide to undo its effect on the canvas. This comes in very handy for experimenting with brush and filtering effects.
+        - [ ]  [ZhaoLucen] Add an undo feature with at least one level of undo so that you can try a brush and decide to undo its effect on the canvas. This comes in very handy for experimenting with brush and filtering effects.
 
 - [ ]  Add the ability to dissolve one image into another.
 
-    *　- [ ] [ZhaoLucen] A different solution to the problem of not being able to see where you're painting is to show a dimmed version of the painting on the canvas. Add a slider that allows the user to fade in or fade out the original image beneath the user's brush strokes on the canvas. (Beware, this bell and whistle is more difficult than it looks).
+    - [ ] [ZhaoLucen] A different solution to the problem of not being able to see where you're painting is to show a dimmed version of the painting on the canvas. Add a slider that allows the user to fade in or fade out the original image beneath the user's brush strokes on the canvas. (Beware, this bell and whistle is more difficult than it looks).
 
 - [ ]  [ZhaoLucen] Add a "mural" effect to your Impressionist by implementing the ability to load in different images while preserving what has been drawn on the canvas. Add a "New Mural Image" or "Change Mural Image" to the controls window that allows the user to change images. The user may then load an image, draw in what he / she prefers on the canvas, and then load a different image and continue drawing on the canvas; thus, a "mural" effect.
 
@@ -41,10 +43,10 @@
 
 - [ ] Implement a multiresolution automatic painting technique. See Painterly Styles for Expressive Rendering.
 
-    * - [ ]  Design a brush that can be used to stretch and pull the image as if it were rubber. See Warp George Bush.
+    - [ ]  Design a brush that can be used to stretch and pull the image as if it were rubber. See Warp George Bush.
 
-        * - [ ]  Implement a curved brush that follows the image gradient. See Painterly Styles for Expressive Rendering.
+        - [ ]  Implement a curved brush that follows the image gradient. See Painterly Styles for Expressive Rendering.
 
-            * - [ ]  Given a source image, construct a new image that is really a mosaic of small (thumbnail) images. To do this, you need to partition the original into tiles and find new thumbnails that are reasonable matches to the tiles. Then draw the new image by substituting the thumbnails for the tiles. See, for example, Adam Finkelsteins Web Gothic. Credit will vary depending on the success of your method.
+            - [ ]  Given a source image, construct a new image that is really a mosaic of small (thumbnail) images. To do this, you need to partition the original into tiles and find new thumbnails that are reasonable matches to the tiles. Then draw the new image by substituting the thumbnails for the tiles. See, for example, Adam Finkelsteins Web Gothic. Credit will vary depending on the success of your method.
 
 - [ ] Extend the Impressionist program to work with video. The user should be able to load a series of images from a video and set up some initial parameters, and the program should automatically generate an impressionistic version of the video. The video should exhibit temporal coherency. Implement Bayesian matting.

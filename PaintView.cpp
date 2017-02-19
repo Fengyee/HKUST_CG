@@ -119,7 +119,6 @@ void PaintView::draw()
 		// glShadeModel(GL_FLAT);
 		// glClearColor(0.0, 0.0, 0.0, 0.0);
 
-
 		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
 		Point target(coord.x, m_nWindowHeight - coord.y);
 		//std::cout << coord.x << ' ' << coord.y << std::endl;

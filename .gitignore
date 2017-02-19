@@ -251,3 +251,4 @@ paket-files/
 .idea/
 *.sln.iml
 .vs/impressionist/v14/.suo
+impressionist.sdf

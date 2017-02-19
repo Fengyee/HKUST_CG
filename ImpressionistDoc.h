@@ -21,6 +21,7 @@ public:
 
 	int		loadImage(char *iname);			// called by the UI to load image
 	int		saveImage(char *iname);			// called by the UI to save image
+	int		loadAlphaMappedImage(char *name);
 
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
@@ -28,6 +29,7 @@ public:
 	void	autoPainting();					// called by the UI to start auto painting
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	void	setBrushDirection(int type);
+	bool	alphaMappedImageLoaded;
 
 	int		getSize();						
 	void	setSize(int size);				
@@ -39,7 +41,6 @@ public:
 	void	setAlpha(float alpha);				
 	int		getMosasicLevel();
 	int		getSpacing();					// get the spacing of auto painting
-
 
 	char*	getImageName();					// get the current image name
 	
@@ -56,6 +57,10 @@ public:
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
 	unsigned char*  m_ucUndoBitstart;
+
+	unsigned char*  m_ucAlphaMappedImage;
+	int				m_nAlphaMappedImageWidth;
+	int				m_nAlphaMappedImageHeight;
 
 
 	// The current active brush.

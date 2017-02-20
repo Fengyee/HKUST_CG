@@ -47,8 +47,41 @@ void ImpBrush::SetColor (const Point source)
 	ImpressionistDoc* pDoc = GetDocument();
 
 	GLubyte color[4];
+	GLubyte pixel_cur[4];
+	int conv_sum = 0;
+	int r_conv = 0;
+	int g_conv = 0;
+	int b_conv = 0;
+	if (pDoc->getFilter() == 0) {
+		std::cout << pDoc->getFilter();
+		memcpy(color, pDoc->GetOriginalPixel(source), 3);
+	}
+	else {
+		int filterHeight = pDoc->getFilterHeight();
+		int filterWidth = pDoc->getFilterWidth();
+		int* filterValue = pDoc->getFilterValue();
+		int offset_x = filterWidth / 2;
+		int offset_y = filterHeight / 2;
+		for (int i = 0; i < filterHeight; i++) {
+			for (int j = 0; j < filterWidth; j++) {
+				memcpy(pixel_cur, pDoc->GetOriginalPixel(source.x - offset_x + i, source.y - offset_y + j), 3);
+				//glReadPixels(source.x-1+i, source.y-1+j, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel_cur);
+				//pixels_bw = (pixel_cur[0] + pixel_cur[1] + pixel_cur[2]) / 3;
+				r_conv = r_conv + (int)pixel_cur[0] * filterValue[i*filterWidth+j];
+				g_conv = g_conv + (int)pixel_cur[1] * filterValue[i*filterWidth + j];
+				b_conv = b_conv + (int)pixel_cur[2] * filterValue[i*filterWidth + j];
+				conv_sum = conv_sum + filterValue[i*filterWidth + j];
+				//std::cout << (int)pixels_bw << filter_x[i][j] << filter_y[i][j] << std::endl;
+				//std::cout << x_conv << y_conv << std::endl;
+			}
+		}
+		if (conv_sum == 0) conv_sum = 1;
+		color[0] = r_conv / conv_sum;
+		color[1] = g_conv / conv_sum;
+		color[2] = b_conv / conv_sum;
 
-	memcpy(color, pDoc->GetOriginalPixel(source), 3);
+
+	}
 	color[3] = m_pDoc->getAlpha() * 255;
 	Fl_Color_Chooser* CC = pDoc->m_pUI->m_colorChooser;
 	color[0] *= CC->r();

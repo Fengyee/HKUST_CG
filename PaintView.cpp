@@ -51,7 +51,6 @@ PaintView::PaintView(int			x,
 
 void PaintView::draw()
 {
-	printf("called\n");
 	#ifndef MESA
 	// To avoid flicker on some machines.
 	glDrawBuffer(GL_FRONT_AND_BACK);

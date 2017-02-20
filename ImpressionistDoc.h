@@ -43,6 +43,10 @@ public:
 	int		getMosasicLevel();
 	int		getSpacing();					// get the spacing of auto painting
 	int		getRand();
+	int		getFilter();
+	int*	getFilterValue();
+	int		getFilterHeight();
+	int		getFilterWidth();
 
 	char*	getImageName();					// get the current image name
 	

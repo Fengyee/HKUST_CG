@@ -255,6 +255,36 @@ int ImpressionistDoc::loadImage(char *iname)
 	return 1;
 }
 
+int ImpressionistDoc::loadAnotherImage(char *iname)
+{
+	// try to open the image to read
+	unsigned char*	data;
+	int				width,
+		height;
+
+	if ((data = readBMP(iname, width, height)) == NULL)
+	{
+		fl_alert("Can't load bitmap file");
+		return 0;
+	}
+
+	if (m_nPaintWidth != width || m_nPaintHeight != height)
+	{
+		fl_alert("The size is different from that of original picture");
+		return 0;
+	}
+
+	if (m_ucBitmap) delete[] m_ucBitmap;
+	m_ucBitmap = data;
+	m_pUI->m_origView->refresh();
+
+
+	alphaMappedImageLoaded = false;
+	m_pUI->setAlphaMappedBrushState();
+
+	return 1;
+
+}
 
 //----------------------------------------------------------------
 // Save the specified image

@@ -197,6 +197,20 @@ int ImpressionistDoc::getRand()
 {
 	return m_pUI->getRand();
 }
+
+int	ImpressionistDoc::getFilter()
+{
+	return m_pUI->getFilter();
+}
+int* ImpressionistDoc::getFilterValue() {
+	return m_pUI->getFilterValue();
+}
+int	ImpressionistDoc::getFilterHeight() {
+	return m_pUI->getFilterHeight();
+}
+int ImpressionistDoc::getFilterWidth() {
+	return m_pUI->getFilterWidth();
+}
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 

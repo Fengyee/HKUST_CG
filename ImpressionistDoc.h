@@ -20,6 +20,7 @@ public:
 	void	setUI(ImpressionistUI* ui);		// Assign the UI to use
 
 	int		loadImage(char *iname);			// called by the UI to load image
+	int		loadAnotherImage(char *iname);
 	int		saveImage(char *iname);			// called by the UI to save image
 	int		loadAlphaMappedImage(char *name);
 

@@ -183,6 +183,15 @@ void ImpressionistUI::cb_load_image(Fl_Menu_* o, void* v)
 	}
 }
 
+void ImpressionistUI::cb_load_another_image(Fl_Menu_* o, void* v)
+{
+	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+	if (newfile != NULL) {
+		pDoc->loadAnotherImage(newfile);
+	}
+}
+
 
 //------------------------------------------------------------------
 // Brings up a file chooser and then saves the painted image
@@ -505,7 +514,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Paintly...",	FL_ALT + 'p', 0, 0, FL_MENU_DIVIDER },
 	{ "Load Edge Image...",		FL_ALT + 'e', 0 },
 	{ "Load Alphamap Image...",		FL_CTRL + 'b', (Fl_Callback *)ImpressionistUI::cb_loadAlphaMappedImage },
-	{ "Load Another Image...",	FL_ALT + 'a', 0, 0, FL_MENU_DIVIDER },
+	//{ "Load Another Image...",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_load_another_image, 0, FL_MENU_DIVIDER },
+	{ "Load Another Image...",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_load_another_image },
 	{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
 	{ 0 },
 

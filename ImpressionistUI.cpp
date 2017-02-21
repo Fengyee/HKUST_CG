@@ -12,6 +12,7 @@
 #include "impressionistUI.h"
 #include "impressionistDoc.h"
 
+
 /*
 //------------------------------ Widget Examples -------------------------------------------------
 Here is some example code for all of the widgets that you may need to add to the
@@ -183,6 +184,15 @@ void ImpressionistUI::cb_load_image(Fl_Menu_* o, void* v)
 	}
 }
 
+void ImpressionistUI::cb_load_another_image(Fl_Menu_* o, void* v)
+{
+	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+	if (newfile != NULL) {
+		pDoc->loadAnotherImage(newfile);
+	}
+}
+
 
 //------------------------------------------------------------------
 // Brings up a file chooser and then saves the painted image
@@ -206,6 +216,11 @@ void ImpressionistUI::cb_save_image(Fl_Menu_* o, void* v)
 void ImpressionistUI::cb_brushes(Fl_Menu_* o, void* v)
 {
 	whoami(o)->m_brushDialog->show();
+}
+
+void ImpressionistUI::cb_filter_kernel(Fl_Menu_* o, void* v)
+{
+	whoami(o)->m_filterDialog->show();
 }
 
 //------------------------------------------------------------
@@ -304,7 +319,7 @@ void ImpressionistUI::cb_size_rand(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
 //	if (ImpressionistUI::getRand() == 0)
 //	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
-	printf("%d", int(((Fl_Light_Button *)o)->value()));
+	//printf("%d", int(((Fl_Light_Button *)o)->value()));
 }
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
@@ -386,6 +401,119 @@ void ImpressionistUI::setAlphaMappedBrushState()
 		brushTypeMenu[7].activate();
 	}
 }
+
+// filter kernel
+void ImpressionistUI::cb_filterWidthInput(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nFilterWidth = int(((Fl_Value_Input *)o)->value());
+}
+void ImpressionistUI::cb_filterHeightInput(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nFilterHeight = int(((Fl_Value_Input *)o)->value());
+}
+void ImpressionistUI::cb_filter_value(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nFilterValue = strdup(((Fl_Multiline_Input *)o)->value());
+}
+void ImpressionistUI::cb_filter_normal_button(Fl_Widget* o, void* v)
+{
+	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
+
+	pDoc->clearCanvas();
+	int filter_width = ((ImpressionistUI*)(o->user_data()))->m_nFilterWidth;
+	int filter_height = ((ImpressionistUI*)(o->user_data()))->m_nFilterHeight;
+	std::string s1("");
+	for (int i = 0; i < filter_height; i++) {
+		for (int j = 0; j < filter_width; j++) {
+			if (j != filter_width - 1)
+				s1.append("1, ");
+			else
+				s1.append("1;\n");
+		}
+	}
+	//std::cout << s1 << std::endl;
+	
+	((ImpressionistUI*)(o->user_data()))->m_nFilterValue = new char[s1.size() + 1]; 
+	std::copy(s1.begin(), s1.end(), ((ImpressionistUI*)(o->user_data()))->m_nFilterValue);
+	((ImpressionistUI*)(o->user_data()))->m_nFilterValue[s1.size()] = '\0';
+	((ImpressionistUI*)(o->user_data()))->m_FilterValue->value(((ImpressionistUI*)(o->user_data()))->m_nFilterValue);
+}
+void ImpressionistUI::cb_filter_apply(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nFilterApply = (int)((Fl_Light_Button *)o)->value();
+	int apply = int(((ImpressionistUI*)(o->user_data()))->m_nFilterApply);
+	if (apply)
+	{
+		int filter_width = ((ImpressionistUI*)(o->user_data()))->m_nFilterWidth;
+		int filter_height = ((ImpressionistUI*)(o->user_data()))->m_nFilterHeight;
+		if (filter_width <= 0 || filter_height <= 0)
+		{
+			fl_alert("Invalid size of filter kernel");
+			return;
+		}
+		char* filter_value = ((ImpressionistUI*)(o->user_data()))->m_nFilterValue;
+
+		if (!((ImpressionistUI*)(o->user_data()))->construct_filter(filter_value, filter_width, filter_height))
+		{
+			fl_alert("Invalid input for filter kernel");
+			((Fl_Light_Button *)o)->value(0);
+			return;
+		}
+	}
+
+}
+
+bool ImpressionistUI::construct_filter(char* filter_data, int filter_width, int filter_height)
+{
+
+
+	std::string str(filter_data);
+	std::smatch sm;
+	std::regex e("[\-0-9, ]*;");
+	m_nFilter = new int[filter_width * filter_height];
+
+	int lineCount = 0;
+	while (std::regex_search(str, sm, e)) {
+
+		std::smatch sint;
+		std::regex eint("(-?[0-9]+)[,;]");
+		std::string sub_str(sm[0]);
+		lineCount++;
+		if (lineCount > filter_height)
+		{
+			delete[] m_nFilter;
+			return false;
+		}
+		int itemCount = 0;
+		while (std::regex_search(sub_str, sint, eint)) {
+				
+			std::string item(sint[1]);
+			int newItem = std::stoi(item);
+			itemCount++;
+			if (itemCount > filter_width || newItem < 0)
+			{
+				delete[] m_nFilter;
+				return false;
+			}
+			m_nFilter[(lineCount-1)*filter_width+itemCount-1] = newItem;
+			sub_str = sint.suffix().str();
+		}
+		if (itemCount < filter_width)
+		{
+			delete[] m_nFilter;
+			return false;
+		}
+		str = sm.suffix().str();
+	}
+	if (lineCount < filter_height)
+	{
+		delete[] m_nFilter;
+		return false;
+	}
+	for (int i = 0; i < filter_height*filter_width; ++i)
+			printf("%d", m_nFilter[i]);
+	return true;
+}
 //---------------------------------- per instance functions --------------------------------------
 
 //------------------------------------------------
@@ -464,6 +592,23 @@ int ImpressionistUI::getRand()
 	return m_nRand;
 }
 
+int ImpressionistUI::getFilterHeight()
+{
+	return m_nFilterHeight;
+}
+int ImpressionistUI::getFilterWidth()
+{
+	return m_nFilterWidth;
+}
+int ImpressionistUI::getFilter()
+{
+	return m_nFilterApply;
+}
+int* ImpressionistUI::getFilterValue()
+{
+	return m_nFilter;
+}
+
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -518,10 +663,12 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
 	{ "&Clear Canvas",	FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
 	{ "&Colors...",		FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_color_selector },
-	{ "&Paintly...",	FL_ALT + 'p', 0, 0, FL_MENU_DIVIDER },
+	{ "&Paintly...",	FL_ALT + 'p', 0 },
+	{ "&Filter...",		FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_filter_kernel, 0, FL_MENU_DIVIDER },
 	{ "Load Edge Image...",		FL_ALT + 'e', 0 },
 	{ "Load Alphamap Image...",		FL_CTRL + 'b', (Fl_Callback *)ImpressionistUI::cb_loadAlphaMappedImage },
-	{ "Load Another Image...",	FL_ALT + 'a', 0, 0, FL_MENU_DIVIDER },
+	//{ "Load Another Image...",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_load_another_image, 0, FL_MENU_DIVIDER },
+	{ "Load Another Image...",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_load_another_image },
 	{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
 	{ 0 },
 
@@ -554,6 +701,7 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
 	{ "Scattered Circles",	FL_ALT + 'd', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES },
 	{ "Mosaic",				FL_CTRL + 'm', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_MOSAIC },
 	{ "Alpha Mapped",		FL_CTRL + 'e', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHAMAPPED },
+	{ "Curved",		FL_CTRL + 'v', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_CURVED },
 	{ 0 }
 };
 
@@ -606,7 +754,16 @@ ImpressionistUI::ImpressionistUI() {
 	m_nMosasiLevel = 5;
 	m_nSpacing = 1;
 	m_nRand = 0;
+<<<<<<< HEAD
 	m_nEdgeThreshold = 200;
+=======
+	m_nFilterHeight = 3;
+	m_nFilterWidth = 3;
+	m_nFilterApply = 0;
+	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;";
+	
+//	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;"
+>>>>>>> origin/master
 
 	m_nBrushDirection = SLIDER_AND_RIGHT_MOUSE;
 
@@ -752,4 +909,39 @@ ImpressionistUI::ImpressionistUI() {
 	m_colorSelectorDialog->end();
 
 	brushTypeMenu[7].deactivate();
+
+	// Filter Dialog
+	m_filterDialog = new Fl_Window(300, 300, "Filter Kernel");
+	m_FilterWidth = new Fl_Value_Input(60, 10, 40, 20, "Width");
+	m_FilterWidth->user_data((void*)(this));
+	m_FilterWidth->type(FL_INT_INPUT);
+	m_FilterWidth->labelfont(FL_COURIER);
+	m_FilterWidth->labelsize(12);
+	m_FilterWidth->callback(cb_filterWidthInput);
+	m_FilterWidth->value(m_nFilterWidth);
+	m_FilterHeight = new Fl_Value_Input(160, 10, 40, 20, "Height");
+	m_FilterHeight->user_data((void*)(this));
+	m_FilterHeight->type(FL_INT_INPUT);
+	m_FilterHeight->labelfont(FL_COURIER);
+	m_FilterHeight->labelsize(12);
+	m_FilterHeight->callback(cb_filterHeightInput);
+	m_FilterHeight->value(m_nFilterHeight);
+	m_FilterValue = new Fl_Multiline_Input(20, 50, 260, 100, "Please enter kernel values separated with ',' for each element and ';' for each row\n");
+	m_FilterValue->user_data((void*)(this));
+	m_FilterValue->labelfont(FL_COURIER);
+	m_FilterValue->labelsize(12);
+	m_FilterValue->callback(cb_filter_value);
+	m_FilterValue->value("1, 1, 1;\n1, 1, 1;\n1, 1, 1;");
+	m_FilterApply = new Fl_Light_Button(210, 10, 60, 20, "Apply");
+	m_FilterApply->user_data((void*)(this));
+	m_FilterApply->labelfont(FL_COURIER);
+	m_FilterApply->labelsize(12);
+	m_FilterApply->callback(cb_filter_apply);
+	m_FilterApply->value(m_nFilterApply);
+	m_FilterNormal = new Fl_Button(100, 170, 100, 30, "Normalize");
+	m_FilterNormal->user_data((void*)(this));
+	m_FilterNormal->labelfont(FL_COURIER);
+	m_FilterNormal->labelsize(12);
+	m_FilterNormal->callback(cb_filter_normal_button);
+	m_filterDialog->end();
 }

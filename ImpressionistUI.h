@@ -26,6 +26,9 @@
 
 #include "ImpBrush.h"
 
+#include <string>
+#include <regex>
+
 class ImpressionistUI {
 public:
 	ImpressionistUI();
@@ -40,6 +43,7 @@ public:
 	// for brush dialog
 	Fl_Window*			m_brushDialog;
 	Fl_Window*			m_colorSelectorDialog;
+	Fl_Window*			m_filterDialog;
 	Fl_Choice*			m_BrushTypeChoice;
 	Fl_Choice*			m_StrokeDirectionChoice;
 	Fl_Light_Button*	m_EdgeClippingButton;
@@ -59,6 +63,14 @@ public:
 	Fl_Slider*			m_EdgeThresholdSlider;
 	Fl_Button*			m_DoItButton;
 	Fl_Slider*			m_MosaicSlider;
+
+	// filterDialog
+//	Fl_Button*			m_FilterSize;
+	Fl_Button*			m_FilterApply;
+	Fl_Value_Input*		m_FilterWidth;
+	Fl_Value_Input*		m_FilterHeight;
+	Fl_Input*			m_FilterValue;
+	Fl_Button*			m_FilterNormal;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -84,6 +96,12 @@ public:
 
 	void				setRand(int rand);
 	int					getRand();
+	int					getFilterWidth();
+	int					getFilterHeight();
+	int					getFilter();
+	int*				getFilterValue();
+	bool				construct_filter(char* filter_data, int filter_width, int filter_height);
+
 
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
@@ -97,7 +115,16 @@ private:
 	int		m_nMosasiLevel;
 	int		m_nSpacing;
 	int		m_nRand;
+<<<<<<< HEAD
 	int		m_nEdgeThreshold;
+=======
+	int		m_nFilterWidth;
+	int		m_nFilterHeight;
+	char*	m_nFilterValue;
+	int		m_nFilterApply;
+	int*	m_nFilter;
+
+>>>>>>> origin/master
 
 
 	// Static class members
@@ -110,6 +137,7 @@ private:
 	// All callbacks here.  Callbacks are declared 
 	// static
 	static void	cb_load_image(Fl_Menu_* o, void* v);
+	static void	cb_load_another_image(Fl_Menu_* o, void* v);
 	static void	cb_save_image(Fl_Menu_* o, void* v);
 	static void	cb_brushes(Fl_Menu_* o, void* v);
 	static void	cb_clear_canvas(Fl_Menu_* o, void* v);
@@ -130,8 +158,17 @@ private:
 	static void cb_color_selector(Fl_Menu_* o, void * v);
 	static void	cb_mosaicSlides(Fl_Widget* o, void* v);
 	static void cb_loadAlphaMappedImage(Fl_Menu_* o, void* v);
+<<<<<<< HEAD
 	static void cb_edge_threshold(Fl_Widget* o, void* v);
 	static void cb_recal_edge(Fl_Menu_* o, void* v);
+=======
+	static void cb_filter_kernel(Fl_Menu_* o, void* v);
+	static void cb_filter_apply(Fl_Widget* o, void* v);
+	static void cb_filterWidthInput(Fl_Widget* o, void* v);
+	static void cb_filterHeightInput(Fl_Widget* o, void* v);
+	static void cb_filter_value(Fl_Widget* o, void* v);
+	static void	cb_filter_normal_button(Fl_Widget* o, void* v);
+>>>>>>> origin/master
 };
 
 #endif

@@ -21,6 +21,7 @@
 #include "ScatteredPointBrush.h"
 #include "MosaicBrush.h"
 #include "AlphaMappedBrush.h"
+#include "CurvedBrush.h"
 
 
 
@@ -68,6 +69,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new MosaicBrush(this, "Mosaic");
 	ImpBrush::c_pBrushes[BRUSH_ALPHAMAPPED]
 		= new AlphaMappedBrush(this, "Alpha Mapped");
+	ImpBrush::c_pBrushes[BRUSH_CURVED]
+		= new CurvedBrush(this, "Curved");
 
 	// make one of the brushes current
 	m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -135,6 +138,11 @@ void ImpressionistDoc::setBrushType(int type)
 		break;
 	case BRUSH_ALPHAMAPPED:
 		m_pUI->m_BrushSizeSlider->activate();
+	case BRUSH_CURVED:
+		m_pUI->m_BrushSizeSlider->activate();
+		m_pUI->m_BrushLineWidthSlider->activate();
+		m_pUI->m_BrushAlphaSlider->activate();
+		m_pUI->m_EdgeClippingButton->activate();
 	default:
 		break;
 	}
@@ -206,6 +214,7 @@ int ImpressionistDoc::getRand()
 	return m_pUI->getRand();
 }
 
+<<<<<<< HEAD
 void ImpressionistDoc::recalEdgeImg()
 {
 	if (m_ucEdgeImg)
@@ -220,6 +229,20 @@ void ImpressionistDoc::recalEdgeImg()
 			}
 		}
 	}
+=======
+int	ImpressionistDoc::getFilter()
+{
+	return m_pUI->getFilter();
+}
+int* ImpressionistDoc::getFilterValue() {
+	return m_pUI->getFilterValue();
+}
+int	ImpressionistDoc::getFilterHeight() {
+	return m_pUI->getFilterHeight();
+}
+int ImpressionistDoc::getFilterWidth() {
+	return m_pUI->getFilterWidth();
+>>>>>>> origin/master
 }
 //---------------------------------------------------------
 // Load the specified image
@@ -295,6 +318,36 @@ int ImpressionistDoc::loadImage(char *iname)
 	return 1;
 }
 
+int ImpressionistDoc::loadAnotherImage(char *iname)
+{
+	// try to open the image to read
+	unsigned char*	data;
+	int				width,
+		height;
+
+	if ((data = readBMP(iname, width, height)) == NULL)
+	{
+		fl_alert("Can't load bitmap file");
+		return 0;
+	}
+
+	if (m_nPaintWidth != width || m_nPaintHeight != height)
+	{
+		fl_alert("The size is different from that of original picture");
+		return 0;
+	}
+
+	if (m_ucBitmap) delete[] m_ucBitmap;
+	m_ucBitmap = data;
+	m_pUI->m_origView->refresh();
+
+
+	alphaMappedImageLoaded = false;
+	m_pUI->setAlphaMappedBrushState();
+
+	return 1;
+
+}
 
 //----------------------------------------------------------------
 // Save the specified image

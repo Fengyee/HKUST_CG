@@ -332,6 +332,7 @@ void PaintView::autoPainting()
 {
 	std::srand(unsigned(std::time(0)));
 	std::vector<int> rand_order;
+
 	
 	//std::cout << "start auto painting" << std::endl;
 	int spacing = m_pDoc->getSpacing();
@@ -346,7 +347,7 @@ void PaintView::autoPainting()
 	}
 	std::random_shuffle(rand_order.begin(), rand_order.end());
 
-
+	isAnEvent = 0;
 
 #ifndef MESA
 	// To avoid flicker on some machines.
@@ -393,9 +394,17 @@ void PaintView::autoPainting()
 		m_pDoc->setSize(originSize);
 			
 	}
+	//std::cout << isAnEvent << ' ';
+	isAnEvent = 1;
+	redraw();
 	SaveCurrentContent();
 	RestoreContent();
+
+
+
 	glFlush();
+
+	//std::cout << isAnEvent << std::endl;
 
 #ifndef MESA
 	// To avoid flicker on some machines.

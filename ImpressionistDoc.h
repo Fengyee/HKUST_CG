@@ -20,6 +20,7 @@ public:
 	void	setUI(ImpressionistUI* ui);		// Assign the UI to use
 
 	int		loadImage(char *iname);			// called by the UI to load image
+	int		loadAnotherImage(char *iname);
 	int		saveImage(char *iname);			// called by the UI to save image
 	int		loadAlphaMappedImage(char *name);
 
@@ -43,6 +44,10 @@ public:
 	int		getMosasicLevel();
 	int		getSpacing();					// get the spacing of auto painting
 	int		getRand();
+	int		getFilter();
+	int*	getFilterValue();
+	int		getFilterHeight();
+	int		getFilterWidth();
 
 	char*	getImageName();					// get the current image name
 	

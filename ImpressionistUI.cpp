@@ -402,21 +402,24 @@ void ImpressionistUI::setAlphaMappedBrushState()
 // filter kernel
 void ImpressionistUI::cb_filterWidthInput(Fl_Widget* o, void* v)
 {
+	((ImpressionistUI*)(o->user_data()))->m_FilterApply->value(0);
 	((ImpressionistUI*)(o->user_data()))->m_nFilterWidth = int(((Fl_Value_Input *)o)->value());
 }
 void ImpressionistUI::cb_filterHeightInput(Fl_Widget* o, void* v)
 {
+	((ImpressionistUI*)(o->user_data()))->m_FilterApply->value(0);
 	((ImpressionistUI*)(o->user_data()))->m_nFilterHeight = int(((Fl_Value_Input *)o)->value());
 }
 void ImpressionistUI::cb_filter_value(Fl_Widget* o, void* v)
 {
+	((ImpressionistUI*)(o->user_data()))->m_FilterApply->value(0);
 	((ImpressionistUI*)(o->user_data()))->m_nFilterValue = strdup(((Fl_Multiline_Input *)o)->value());
 }
 void ImpressionistUI::cb_filter_normal_button(Fl_Widget* o, void* v)
 {
+	((ImpressionistUI*)(o->user_data()))->m_FilterApply->value(0);
 	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
 
-	pDoc->clearCanvas();
 	int filter_width = ((ImpressionistUI*)(o->user_data()))->m_nFilterWidth;
 	int filter_height = ((ImpressionistUI*)(o->user_data()))->m_nFilterHeight;
 	std::string s1("");
@@ -976,10 +979,11 @@ ImpressionistUI::ImpressionistUI() {
 	m_FilterHeight->labelsize(12);
 	m_FilterHeight->callback(cb_filterHeightInput);
 	m_FilterHeight->value(m_nFilterHeight);
-	m_FilterValue = new Fl_Multiline_Input(20, 50, 260, 100, "Please enter kernel values separated with ',' for each element and ';' for each row\n");
+	m_FilterValue = new Fl_Multiline_Input(20, 50, 260, 180, "Please enter kernel values\n");
 	m_FilterValue->user_data((void*)(this));
 	m_FilterValue->labelfont(FL_COURIER);
 	m_FilterValue->labelsize(12);
+	m_FilterValue->align(FL_ALIGN_TOP);
 	m_FilterValue->callback(cb_filter_value);
 	m_FilterValue->value("1, 1, 1;\n1, 1, 1;\n1, 1, 1;");
 	m_FilterApply = new Fl_Light_Button(210, 10, 60, 20, "Apply");
@@ -988,7 +992,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_FilterApply->labelsize(12);
 	m_FilterApply->callback(cb_filter_apply);
 	m_FilterApply->value(m_nFilterApply);
-	m_FilterNormal = new Fl_Button(100, 170, 100, 30, "Normalize");
+	m_FilterNormal = new Fl_Button(100, 250, 100, 30, "Normalize");
 	m_FilterNormal->user_data((void*)(this));
 	m_FilterNormal->labelfont(FL_COURIER);
 	m_FilterNormal->labelsize(12);

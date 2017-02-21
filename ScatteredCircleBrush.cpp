@@ -58,9 +58,9 @@ void ScatteredCircleBrush::BrushMove(const Point source, const Point target)
 		const Point s(source.x - radius + offset_x, source.y - radius + offset_y);
 		const Point t(target.x - radius + offset_x, target.y - radius + offset_y);
 		SetColor(s);
-		for (int i = 0; i < 360; i++)
+		for (int i = 0; i < 90; i++)
 		{
-			float degInRad = i * M_PI / 180.0;
+			float degInRad = i * 4 * M_PI / 180.0;
 			glVertex2f(t.x + cos(degInRad)*radius, t.y + sin(degInRad)*radius);
 		}
 		glEnd();

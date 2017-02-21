@@ -53,7 +53,6 @@ void ImpBrush::SetColor (const Point source)
 	int g_conv = 0;
 	int b_conv = 0;
 	if (pDoc->getFilter() == 0) {
-		std::cout << pDoc->getFilter();
 		memcpy(color, pDoc->GetOriginalPixel(source), 3);
 	}
 	else {

@@ -32,6 +32,7 @@ public:
 	void	setBrushDirection(int type);
 	bool	alphaMappedImageLoaded;
 	void	recalEdgeImg();
+	void	rePaint();
 
 	int		getSize();						
 	void	setSize(int size);				
@@ -48,6 +49,7 @@ public:
 	int*	getFilterValue();
 	int		getFilterHeight();
 	int		getFilterWidth();
+	int		getResolution();
 
 	char*	getImageName();					// get the current image name
 	

@@ -141,11 +141,8 @@
   <ItemGroup>
     <ClCompile Include="AlphaMappedBrush.cpp" />
     <ClCompile Include="Bitmap.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="ImageGradient.cpp" />
-=======
     <ClCompile Include="CurvedBrush.cpp" />
->>>>>>> origin/master
     <ClCompile Include="ImpBrush.cpp" />
     <ClCompile Include="Impressionist.cpp" />
     <ClCompile Include="ImpressionistDoc.cpp" />

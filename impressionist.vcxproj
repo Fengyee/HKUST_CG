@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="AlphaMappedBrush.cpp" />
     <ClCompile Include="Bitmap.cpp" />
+    <ClCompile Include="CurvedBrush.cpp" />
     <ClCompile Include="ImpBrush.cpp" />
     <ClCompile Include="Impressionist.cpp" />
     <ClCompile Include="ImpressionistDoc.cpp" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="AlphaMappedBrush.h" />
     <ClInclude Include="bitmap.h" />
+    <ClInclude Include="curvedBrush.h" />
     <ClInclude Include="ImpBrush.h" />
     <ClInclude Include="impressionist.h" />
     <ClInclude Include="impressionistDoc.h" />

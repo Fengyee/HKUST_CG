@@ -21,6 +21,7 @@
 #include "ScatteredPointBrush.h"
 #include "MosaicBrush.h"
 #include "AlphaMappedBrush.h"
+#include "CurvedBrush.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -60,6 +61,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new MosaicBrush(this, "Mosaic");
 	ImpBrush::c_pBrushes[BRUSH_ALPHAMAPPED]
 		= new AlphaMappedBrush(this, "Alpha Mapped");
+	ImpBrush::c_pBrushes[BRUSH_CURVED]
+		= new CurvedBrush(this, "Curved");
 
 	// make one of the brushes current
 	m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -127,6 +130,11 @@ void ImpressionistDoc::setBrushType(int type)
 		break;
 	case BRUSH_ALPHAMAPPED:
 		m_pUI->m_BrushSizeSlider->activate();
+	case BRUSH_CURVED:
+		m_pUI->m_BrushSizeSlider->activate();
+		m_pUI->m_BrushLineWidthSlider->activate();
+		m_pUI->m_BrushAlphaSlider->activate();
+		m_pUI->m_EdgeClippingButton->activate();
 	default:
 		break;
 	}

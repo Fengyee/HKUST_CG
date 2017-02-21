@@ -319,7 +319,7 @@ void ImpressionistUI::cb_size_rand(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
 //	if (ImpressionistUI::getRand() == 0)
 //	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
-	printf("%d", int(((Fl_Light_Button *)o)->value()));
+	//printf("%d", int(((Fl_Light_Button *)o)->value()));
 }
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
@@ -419,7 +419,7 @@ void ImpressionistUI::cb_filter_normal_button(Fl_Widget* o, void* v)
 				s1.append("1;\n");
 		}
 	}
-	std::cout << s1 << std::endl;
+	//std::cout << s1 << std::endl;
 	
 	((ImpressionistUI*)(o->user_data()))->m_nFilterValue = new char[s1.size() + 1]; 
 	std::copy(s1.begin(), s1.end(), ((ImpressionistUI*)(o->user_data()))->m_nFilterValue);
@@ -685,6 +685,7 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
 	{ "Scattered Circles",	FL_ALT + 'd', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES },
 	{ "Mosaic",				FL_CTRL + 'm', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_MOSAIC },
 	{ "Alpha Mapped",		FL_CTRL + 'e', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHAMAPPED },
+	{ "Curved",		FL_CTRL + 'v', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_CURVED },
 	{ 0 }
 };
 
@@ -920,4 +921,5 @@ ImpressionistUI::ImpressionistUI() {
 	m_FilterNormal->labelfont(FL_COURIER);
 	m_FilterNormal->labelsize(12);
 	m_FilterNormal->callback(cb_filter_normal_button);
+	m_filterDialog->end();
 }

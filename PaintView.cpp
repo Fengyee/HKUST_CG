@@ -394,7 +394,7 @@ void PaintView::autoPainting()
 		m_pDoc->setSize(originSize);
 			
 	}
-	std::cout << isAnEvent << ' ';
+	//std::cout << isAnEvent << ' ';
 	isAnEvent = 1;
 	redraw();
 	SaveCurrentContent();
@@ -404,7 +404,7 @@ void PaintView::autoPainting()
 
 	glFlush();
 
-	std::cout << isAnEvent << std::endl;
+	//std::cout << isAnEvent << std::endl;
 
 #ifndef MESA
 	// To avoid flicker on some machines.

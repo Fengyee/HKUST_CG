@@ -29,6 +29,14 @@
 #include <string>
 #include <regex>
 
+enum
+{
+	DISPLAY_ORIGINAL,
+	DISPLAY_EDGE,
+	DISPLAY_ANOTHER,
+	NUM_DISPLAY_TYPE // Make sure this stays at the end!
+};
+
 class ImpressionistUI {
 public:
 	ImpressionistUI();
@@ -104,7 +112,7 @@ public:
 	int					getFilter();
 	int*				getFilterValue();
 	bool				construct_filter(char* filter_data, int filter_width, int filter_height);
-
+	bool				getEdgeClipping();
 
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
@@ -124,8 +132,8 @@ private:
 	char*	m_nFilterValue;
 	int		m_nFilterApply;
 	int*	m_nFilter;
+	bool	m_bEdgeClipping;
 	int		m_nResolution;
-
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
@@ -166,6 +174,8 @@ private:
 	static void cb_filterHeightInput(Fl_Widget* o, void* v);
 	static void cb_filter_value(Fl_Widget* o, void* v);
 	static void	cb_filter_normal_button(Fl_Widget* o, void* v);
+	static void cb_imageChoice(Fl_Menu_* o, void* v);
+	static void cb_edgeclipping_button(Fl_Widget* o, void* v);
 	static void cb_resolution_slider(Fl_Widget* o, void* v);
 	static void cb_re_paint_button(Fl_Widget* o, void* v);
 };

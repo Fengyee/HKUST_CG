@@ -47,6 +47,8 @@ ImpressionistDoc::ImpressionistDoc()
 	m_ucEdgeImg = NULL;
 	m_ipGradient = NULL;
 	m_ipGValue = NULL;
+	m_ucAnotherImg = NULL;
+	m_ucdisplayImage = NULL;
 
 	// create one instance of each brush
 	ImpBrush::c_nBrushCount = NUM_BRUSH_TYPE;
@@ -146,7 +148,27 @@ void ImpressionistDoc::setBrushType(int type)
 	default:
 		break;
 	}
+}
 
+void ImpressionistDoc::setDisplayImage(int type)
+{
+	switch (type)
+	{
+	case DISPLAY_ORIGINAL:
+		m_ucdisplayImage = m_ucBitmap;
+		break;
+	case DISPLAY_ANOTHER:
+		if (m_ucAnotherImg)
+			m_ucdisplayImage = m_ucAnotherImg;
+		break;
+	case DISPLAY_EDGE:
+		if (m_ucEdgeImg)
+			m_ucdisplayImage = m_ucEdgeImg;
+		break;
+	default:
+		break;
+	} 
+	m_pUI->m_origView->refresh();
 }
 
 void ImpressionistDoc::setBrushDirection(int type)
@@ -219,9 +241,11 @@ void ImpressionistDoc::recalEdgeImg()
 {
 	if (m_ucEdgeImg)
 	{
+		memset(m_ucEdgeImg, 0, 3 * m_nWidth * m_nHeight * sizeof(unsigned char));
+		int threshold = m_pUI->getEdgeThreshold();
 		for (int i = 0; i < m_nWidth * m_nHeight; i++)
 		{
-			if (m_ipGValue[i] >= m_pUI->getEdgeThreshold())
+			if (m_ipGValue[i] > threshold)
 			{
 				m_ucEdgeImg[3 * i] = 255;
 				m_ucEdgeImg[3 * i + 1] = 255;
@@ -229,6 +253,12 @@ void ImpressionistDoc::recalEdgeImg()
 			}
 		}
 	}
+
+	if (m_ucEdgeImg == m_ucdisplayImage)
+	{
+		m_pUI->m_origView->refresh();
+	}
+
 }
 
 void ImpressionistDoc::rePaint()
@@ -248,7 +278,6 @@ int	ImpressionistDoc::getFilterHeight() {
 }
 int ImpressionistDoc::getFilterWidth() {
 	return m_pUI->getFilterWidth();
-
 }
 
 int ImpressionistDoc::getResolution() {
@@ -292,14 +321,18 @@ int ImpressionistDoc::loadImage(char *iname)
 	// get the gradient bmp and magnitude map
 	m_ipGradient = getImageGradient(data, width, height);
 	m_ipGValue = new int[width * height];
+	memset(m_ipGValue, 0, width* height * sizeof(int));
 	for (int i = 0; i < width * height; i++)
 	{
 		m_ipGValue[i] = sqrt(m_ipGradient[i * 2] * m_ipGradient[i * 2]
 			+ m_ipGradient[i * 2 + 1] * m_ipGradient[i * 2 + 1]);
 	}
 
+	recalEdgeImg();
+
 
 	m_ucBitmap = data;
+	m_ucdisplayImage = m_ucBitmap;
 
 	// allocate space for draw view (undo)
 	m_ucUndoBitstart = new unsigned char[width * height * 3];
@@ -343,20 +376,14 @@ int ImpressionistDoc::loadAnotherImage(char *iname)
 
 	if (m_nPaintWidth != width || m_nPaintHeight != height)
 	{
-		fl_alert("The size is different from that of original picture");
+		fl_alert("Different dimension");
 		return 0;
 	}
 
-	if (m_ucBitmap) delete[] m_ucBitmap;
-	m_ucBitmap = data;
-	m_pUI->m_origView->refresh();
-
-
-	alphaMappedImageLoaded = false;
-	m_pUI->setAlphaMappedBrushState();
+	if (m_ucAnotherImg) delete[] m_ucAnotherImg;
+	m_ucAnotherImg = data;
 
 	return 1;
-
 }
 
 //----------------------------------------------------------------
@@ -481,6 +508,26 @@ GLubyte* ImpressionistDoc::GetOriginalPixel(const Point p)
 	return GetOriginalPixel(p.x, p.y);
 }
 
+GLubyte* ImpressionistDoc::GetDisplayPixel(int x, int y)
+{
+	if (x < 0)
+		x = 0;
+	else if (x >= m_nWidth)
+		x = m_nWidth - 1;
+
+	if (y < 0)
+		y = 0;
+	else if (y >= m_nHeight)
+		y = m_nHeight - 1;
+
+	return (GLubyte*)(m_ucdisplayImage + 3 * (y*m_nWidth + x));
+}
+
+inline int getBW(unsigned char* img, int index)
+{
+	return img[index * 3] * 0.299 + img[index * 3 + 1] * 0.587 + img[index * 3 + 2] * 0.144;
+}
+
 int* getImageGradient(unsigned char* img, int width, int height)
 {
 	int* result = new int[width * height * 2];
@@ -495,16 +542,16 @@ int* getImageGradient(unsigned char* img, int width, int height)
 			- 1  0  1*/
 
 			int index = (x + y * width);
-			result[index * 2] = img[index + 1] * 2 - img[index - 1] * 2
-				+ img[index + width + 1] - img[index + width - 1]
-				+ img[index - width + 1] - img[index - width - 1];
+			result[index * 2] = getBW(img, index + 1) * 2 - getBW(img, index - 1) * 2
+				+ getBW(img, index + width + 1) - getBW(img, index + width - 1)
+				+ getBW(img, index - width + 1) - getBW(img, index - width - 1);
 			/*1  2  1
 			0  0  0
 			- 1 - 2 - 1*/
 
-			result[index * 2 + 1] = img[index + width + 1] + 2 * img[index + width]
-				+ img[index + width - 1] - img[index - width - 1]
-				- 2 * img[index - width] - img[index - width + 1];
+			result[index * 2 + 1] = getBW(img, index + width + 1) + 2 * getBW(img, index + width)
+				+ getBW(img, index + width - 1) - getBW(img, index - width - 1)
+				- 2 * getBW(img, index - width) - getBW(img, index - width + 1);
 		}
 	}
 	return result;

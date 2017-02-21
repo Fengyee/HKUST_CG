@@ -141,7 +141,6 @@
   <ItemGroup>
     <ClCompile Include="AlphaMappedBrush.cpp" />
     <ClCompile Include="Bitmap.cpp" />
-    <ClCompile Include="ImageGradient.cpp" />
     <ClCompile Include="CurvedBrush.cpp" />
     <ClCompile Include="ImpBrush.cpp" />
     <ClCompile Include="Impressionist.cpp" />

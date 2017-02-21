@@ -356,8 +356,8 @@ void ImpressionistUI::cb_spacingSlider(Fl_Widget* o, void* v)
 void ImpressionistUI::cb_swap_image(Fl_Menu_* o, void* v)
 {
 	ImpressionistDoc *pDoc = whoami(o)->getDocument();
-	unsigned char* temp = pDoc->m_ucBitmap;
-	pDoc->m_ucBitmap = pDoc->m_ucPainting;
+	unsigned char* temp = pDoc->m_ucdisplayImage;
+	pDoc->m_ucdisplayImage = pDoc->m_ucPainting;
 	pDoc->m_ucPainting = temp;
 	
 	pDoc->m_pUI->m_paintView->refresh();
@@ -459,7 +459,20 @@ void ImpressionistUI::cb_filter_apply(Fl_Widget* o, void* v)
 			return;
 		}
 	}
+}
 
+void ImpressionistUI::cb_imageChoice(Fl_Menu_* o, void* v)
+{
+	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+	int type = (int)v;
+
+	pDoc->setDisplayImage(type);
+}
+
+void ImpressionistUI::cb_edgeclipping_button(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_bEdgeClipping = bool(((Fl_Button *)o)->value());
 }
 
 bool ImpressionistUI::construct_filter(char* filter_data, int filter_width, int filter_height)
@@ -509,6 +522,7 @@ bool ImpressionistUI::construct_filter(char* filter_data, int filter_width, int 
 		delete[] m_nFilter;
 		return false;
 	}
+
 	return true;
 }
 
@@ -667,6 +681,11 @@ int ImpressionistUI::getEdgeThreshold()
 	return m_nEdgeThreshold;
 }
 
+bool ImpressionistUI::getEdgeClipping()
+{
+	return m_bEdgeClipping;
+}
+
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
@@ -677,7 +696,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Colors...",		FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_color_selector },
 	{ "&Paintly...",	FL_ALT + 'p', 0 },
 	{ "&Filter...",		FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_filter_kernel, 0, FL_MENU_DIVIDER },
-	{ "Load Edge Image...",		FL_ALT + 'e', 0 },
+	{ "Load Edge Image...",		FL_CTRL + 'e', 0 },
 	{ "Load Alphamap Image...",		FL_CTRL + 'b', (Fl_Callback *)ImpressionistUI::cb_loadAlphaMappedImage },
 	//{ "Load Another Image...",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_load_another_image, 0, FL_MENU_DIVIDER },
 	{ "Load Another Image...",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_load_another_image },
@@ -686,9 +705,9 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 
 	{ "&Display", 0, 0, 0, FL_SUBMENU},
 	{ "&Swap Paintings",	FL_CTRL + 'a', (Fl_Callback *)ImpressionistUI::cb_swap_image },
-	{ "&Original Image...",	FL_ALT + 'o', 0 },
-	{ "&Edge Image...",	FL_ALT + 'e',0 },
-	{ "&Another Image...",	FL_ALT + 'a', 0},
+	{ "&Original Image...",	FL_ALT + 'o', (Fl_Callback *)ImpressionistUI::cb_imageChoice, (void *)DISPLAY_ORIGINAL },
+	{ "&Edge Image...",	FL_ALT + 'e',(Fl_Callback *)ImpressionistUI::cb_imageChoice, (void *)DISPLAY_EDGE },
+	{ "&Another Image...",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_imageChoice, (void *)DISPLAY_ANOTHER },
 	{ 0 },
 
 	{ "&Options", 0, 0, 0, FL_SUBMENU },
@@ -766,7 +785,10 @@ ImpressionistUI::ImpressionistUI() {
 	m_nMosasiLevel = 5;
 	m_nSpacing = 1;
 	m_nRand = 0;
+
 	m_nEdgeThreshold = 200;
+	m_bEdgeClipping = true;
+
 	m_nFilterHeight = 3;
 	m_nFilterWidth = 3;
 	m_nFilterApply = 0;
@@ -774,6 +796,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_nResolution = 3;
 	
 //	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;"
+
 
 	m_nBrushDirection = SLIDER_AND_RIGHT_MOUSE;
 
@@ -854,6 +877,10 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushAlphaSlider->callback(cb_alphaSlides);
 
 	m_EdgeClippingButton = new Fl_Light_Button(10, 200, 120, 25, "&Edge Clipping");
+	m_EdgeClippingButton->user_data((void*)(this));
+	m_EdgeClippingButton->callback(cb_edgeclipping_button);
+	m_EdgeClippingButton->value(m_bEdgeClipping);
+	m_EdgeClippingButton->deactivate();
 
 	m_AnotherGradientButton = new Fl_Light_Button(240, 200, 150, 25, "&Another Gradient");
 

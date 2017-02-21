@@ -47,7 +47,7 @@ void OriginalView::draw()
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
-	if ( m_pDoc->m_ucBitmap ) 
+	if ( m_pDoc->m_ucdisplayImage)
 	{
 		// note that both OpenGL pixel storage and the Windows BMP format
 		// store pixels left-to-right, BOTTOM-to-TOP!!  thus all the fiddling
@@ -71,7 +71,7 @@ void OriginalView::draw()
 			startrow = 0;
 
 
-		bitstart = m_pDoc->m_ucBitmap + 3 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
+		bitstart = m_pDoc->m_ucdisplayImage + 3 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
 		GLubyte* image = (GLubyte*)bitstart;
 		
 		int start_x = indicator_x - 5 >= 0 ? indicator_x - 5 : 0;
@@ -87,7 +87,7 @@ void OriginalView::draw()
 			{
 				if (start_x + a < end_x && start_y + b < end_y)
 				{
-					GLubyte* point = m_pDoc->GetOriginalPixel(start_x + a, start_y + b);
+					GLubyte* point = m_pDoc->GetDisplayPixel(start_x + a, start_y + b);
 					// printf("Point(%d, %d) %d, %d, %d \n", start_x + a, start_y + b, point[0], point[1], point[2]);
 					indicator_preserve[(a + b * IND_X) * 3] = point[0];
 					indicator_preserve[(a + b * IND_X) * 3 + 1] = point[1];

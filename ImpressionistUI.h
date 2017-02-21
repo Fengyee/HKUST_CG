@@ -80,6 +80,7 @@ public:
 	int					getMosaicLevel();
 	int					getSpacing();
 	void				setAlphaMappedBrushState();
+	int					getEdgeThreshold();
 
 	void				setRand(int rand);
 	int					getRand();
@@ -96,6 +97,7 @@ private:
 	int		m_nMosasiLevel;
 	int		m_nSpacing;
 	int		m_nRand;
+	int		m_nEdgeThreshold;
 
 
 	// Static class members
@@ -128,6 +130,8 @@ private:
 	static void cb_color_selector(Fl_Menu_* o, void * v);
 	static void	cb_mosaicSlides(Fl_Widget* o, void* v);
 	static void cb_loadAlphaMappedImage(Fl_Menu_* o, void* v);
+	static void cb_edge_threshold(Fl_Widget* o, void* v);
+	static void cb_recal_edge(Fl_Menu_* o, void* v);
 };
 
 #endif

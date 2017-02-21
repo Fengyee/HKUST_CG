@@ -30,6 +30,7 @@ public:
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	void	setBrushDirection(int type);
 	bool	alphaMappedImageLoaded;
+	void	recalEdgeImg();
 
 	int		getSize();						
 	void	setSize(int size);				
@@ -58,14 +59,17 @@ public:
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
 	unsigned char*  m_ucUndoBitstart;
+	unsigned char*	m_ucEdgeImg;
 
 	unsigned char*  m_ucAlphaMappedImage;
 	int				m_nAlphaMappedImageWidth;
 	int				m_nAlphaMappedImageHeight;
 
+	int*			m_ipGradient;
+	int*			m_ipGValue;
 
 	// The current active brush.
-	ImpBrush*			m_pCurrentBrush;
+	ImpBrush*		m_pCurrentBrush;
 
 	int m_nBrushDirection;
 	// Size of the brush.

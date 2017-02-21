@@ -38,7 +38,7 @@ void AlphaMappedBrush::BrushMove(const Point source, const Point target)
 	GLubyte color[4];
 
 	memcpy(color, pDoc->GetOriginalPixel(source), 3);
-	// 
+
 	Fl_Color_Chooser* CC = pDoc->m_pUI->m_colorChooser;
 	color[0] *= CC->r();
 	color[1] *= CC->g();

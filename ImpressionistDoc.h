@@ -32,6 +32,7 @@ public:
 	void	setBrushDirection(int type);
 	bool	alphaMappedImageLoaded;
 	void	recalEdgeImg();
+	void	setDisplayImage(int type);
 
 	int		getSize();						
 	void	setSize(int size);				
@@ -65,6 +66,8 @@ public:
 	unsigned char*	m_ucPainting;
 	unsigned char*  m_ucUndoBitstart;
 	unsigned char*	m_ucEdgeImg;
+	unsigned char*	m_ucAnotherImg;
+	unsigned char*	m_ucdisplayImage;
 
 	unsigned char*  m_ucAlphaMappedImage;
 	int				m_nAlphaMappedImageWidth;
@@ -94,6 +97,8 @@ public:
 	GLubyte* GetOriginalPixel( int x, int y );   
 	// Get the color of the original picture at the specified point	
 	GLubyte* GetOriginalPixel( const Point p );  
+
+	GLubyte* GetDisplayPixel(int x, int y);
 
 
 private:

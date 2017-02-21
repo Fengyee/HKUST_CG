@@ -43,6 +43,7 @@ void LineBrush::BrushMove(const Point source, const Point target)
 	int size = pDoc->getSize();
 	int width = pDoc->getLineWidth();
 	double angle = calcAngle(pDoc, source_prev, source);
+	
 	//double angle = pDoc->getLineAngle() * M_PI / 180.0;
 	float alpha = pDoc->getAlpha();
 
@@ -57,8 +58,47 @@ void LineBrush::BrushMove(const Point source, const Point target)
 	glBegin(GL_LINES);
 
 	SetColor(source);
-	glVertex2f(ax, ay);
-	glVertex2f(bx, by);
+
+	if (!dlg->getEdgeClipping())
+	{
+		glVertex2f(ax, ay);
+		glVertex2f(bx, by);
+	}
+	else
+	{
+		Point end;
+		end.x = target.x;
+		end.y = target.y;
+		bool drawOnEdge = pDoc->m_ucEdgeImg[(target.y * pDoc->m_nWidth + target.x) * 3] != 0;
+		for (int i = 0; i <= size / 2; i++)
+		{
+			end.x = target.x - i * cos(angle);
+			end.y = target.y - i * sin(angle);
+			if (end.x <= 0 || end.x >= pDoc->m_nWidth 
+				|| end.y <= 0 || end.y >= pDoc->m_nHeight
+				|| !drawOnEdge && (pDoc->m_ucEdgeImg[3 * (end.x + end.y * pDoc->m_nWidth)] != 0))
+			{
+				break;
+			}
+		}
+		
+		glVertex2d(end.x, end.y);
+		end.x = target.x;
+		end.y = target.y;
+		for (int i = 0; i <= size / 2; i++)
+		{
+			end.x = target.x + i * cos(angle);
+			end.y = target.y + i * sin(angle);
+			if (end.x <= 0 || end.x >= pDoc->m_nWidth
+				|| end.y <= 0 || end.y >= pDoc->m_nHeight
+				|| !drawOnEdge && (pDoc->m_ucEdgeImg[3 * (end.x + end.y * pDoc->m_nWidth)] != 0))
+			{
+				break;
+			}
+		}
+		glVertex2d(end.x, end.y);
+	}
+	
 
 	glEnd();
 

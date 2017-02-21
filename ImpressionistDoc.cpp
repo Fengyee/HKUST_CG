@@ -23,7 +23,13 @@
 #include "AlphaMappedBrush.h"
 #include "CurvedBrush.h"
 
+
+
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
+
+// helper funciton declaration
+int* getImageGradient(unsigned char* img, int width, int height);
+
 
 ImpressionistDoc::ImpressionistDoc()
 {
@@ -38,7 +44,9 @@ ImpressionistDoc::ImpressionistDoc()
 	m_nAlphaMappedImageWidth = -1;
 	m_nAlphaMappedImageHeight = -1;
 	alphaMappedImageLoaded = false;
-
+	m_ucEdgeImg = NULL;
+	m_ipGradient = NULL;
+	m_ipGValue = NULL;
 
 	// create one instance of each brush
 	ImpBrush::c_nBrushCount = NUM_BRUSH_TYPE;
@@ -206,6 +214,22 @@ int ImpressionistDoc::getRand()
 	return m_pUI->getRand();
 }
 
+<<<<<<< HEAD
+void ImpressionistDoc::recalEdgeImg()
+{
+	if (m_ucEdgeImg)
+	{
+		for (int i = 0; i < m_nWidth * m_nHeight; i++)
+		{
+			if (m_ipGValue[i] >= m_pUI->getEdgeThreshold())
+			{
+				m_ucEdgeImg[3 * i] = 255;
+				m_ucEdgeImg[3 * i + 1] = 255;
+				m_ucEdgeImg[3 * i + 2] = 255;
+			}
+		}
+	}
+=======
 int	ImpressionistDoc::getFilter()
 {
 	return m_pUI->getFilter();
@@ -218,6 +242,7 @@ int	ImpressionistDoc::getFilterHeight() {
 }
 int ImpressionistDoc::getFilterWidth() {
 	return m_pUI->getFilterWidth();
+>>>>>>> origin/master
 }
 //---------------------------------------------------------
 // Load the specified image
@@ -247,6 +272,22 @@ int ImpressionistDoc::loadImage(char *iname)
 	if (m_ucBitmap) delete[] m_ucBitmap;
 	if (m_ucPainting) delete[] m_ucPainting;
 	if (m_ucUndoBitstart) delete[] m_ucUndoBitstart;
+	if (m_ucEdgeImg) delete[] m_ucEdgeImg;
+	if (m_ipGradient) delete[] m_ipGradient;
+	if (m_ipGValue) delete[] m_ipGValue;
+
+	// allocate memory for edge img 
+	m_ucEdgeImg = new unsigned char[3 * width * height];
+	memset(m_ucEdgeImg, 0, 3 * width * height * sizeof(unsigned char));
+	// get the gradient bmp and magnitude map
+	m_ipGradient = getImageGradient(data, width, height);
+	m_ipGValue = new int[width * height];
+	for (int i = 0; i < width * height; i++)
+	{
+		m_ipGValue[i] = sqrt(m_ipGradient[i * 2] * m_ipGradient[i * 2]
+			+ m_ipGradient[i * 2 + 1] * m_ipGradient[i * 2 + 1]);
+	}
+
 
 	m_ucBitmap = data;
 
@@ -430,3 +471,31 @@ GLubyte* ImpressionistDoc::GetOriginalPixel(const Point p)
 	return GetOriginalPixel(p.x, p.y);
 }
 
+int* getImageGradient(unsigned char* img, int width, int height)
+{
+	int* result = new int[width * height * 2];
+	memset(result, 0, width*height * 2 * sizeof(int));
+
+	for (int y = 1; y < height - 1; y++)
+	{
+		for (int x = 1; x < width - 1; x++)
+		{
+			/*-1  0  1
+			- 2  0  2
+			- 1  0  1*/
+
+			int index = (x + y * width);
+			result[index * 2] = img[index + 1] * 2 - img[index - 1] * 2
+				+ img[index + width + 1] - img[index + width - 1]
+				+ img[index - width + 1] - img[index - width - 1];
+			/*1  2  1
+			0  0  0
+			- 1 - 2 - 1*/
+
+			result[index * 2 + 1] = img[index + width + 1] + 2 * img[index + width]
+				+ img[index + width - 1] - img[index - width - 1]
+				- 2 * img[index - width] - img[index - width + 1];
+		}
+	}
+	return result;
+}

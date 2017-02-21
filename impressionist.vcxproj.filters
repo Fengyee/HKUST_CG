@@ -60,7 +60,11 @@
     <ClCompile Include="AlphaMappedBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="ImageGradient.cpp">
+=======
     <ClCompile Include="CurvedBrush.cpp">
+>>>>>>> origin/master
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -381,6 +381,18 @@ void ImpressionistUI::cb_loadAlphaMappedImage(Fl_Menu_* o, void* v)
 	}
 }
 
+void ImpressionistUI::cb_edge_threshold(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nEdgeThreshold = int(((Fl_Slider *)o)->value());
+}
+
+void ImpressionistUI::cb_recal_edge(Fl_Menu_* o, void* v)
+{
+	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
+
+	pDoc->recalEdgeImg();
+}
+
 
 void ImpressionistUI::setAlphaMappedBrushState()
 {
@@ -638,6 +650,10 @@ void ImpressionistUI::setRand(int rand)
 		m_SizeRandButton->value(m_nRand);
 }
 
+int ImpressionistUI::getEdgeThreshold()
+{
+	return m_nEdgeThreshold;
+}
 
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
@@ -738,12 +754,16 @@ ImpressionistUI::ImpressionistUI() {
 	m_nMosasiLevel = 5;
 	m_nSpacing = 1;
 	m_nRand = 0;
+<<<<<<< HEAD
+	m_nEdgeThreshold = 200;
+=======
 	m_nFilterHeight = 3;
 	m_nFilterWidth = 3;
 	m_nFilterApply = 0;
 	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;";
 	
 //	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;"
+>>>>>>> origin/master
 
 	m_nBrushDirection = SLIDER_AND_RIGHT_MOUSE;
 
@@ -856,11 +876,13 @@ ImpressionistUI::ImpressionistUI() {
 	m_EdgeThresholdSlider->minimum(0);
 	m_EdgeThresholdSlider->maximum(500);
 	m_EdgeThresholdSlider->step(1);
-	//m_EdgeThresholdSlider->value(m_nAlpha);
+	m_EdgeThresholdSlider->value(m_nEdgeThreshold);
 	m_EdgeThresholdSlider->align(FL_ALIGN_RIGHT);
-	/*m_EdgeThresholdSlider->callback(cb_alphaSlides);*/
+	m_EdgeThresholdSlider->callback(cb_edge_threshold);
 
 	m_DoItButton = new Fl_Button(340, 275, 50, 25, "&Do it");
+	m_DoItButton->user_data((void*)(this));
+	m_DoItButton->callback(cb_recal_edge);
 	
 	m_MosaicSlider = new Fl_Value_Slider(10, 310, 300, 20, "Mosaic Level");
 	m_MosaicSlider->user_data((void*)(this));	// record self to be used by static callback functions

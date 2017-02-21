@@ -45,7 +45,7 @@
 
     - [ ]  Design a brush that can be used to stretch and pull the image as if it were rubber. See Warp George Bush.
 
-        - [ ]  Implement a curved brush that follows the image gradient. See Painterly Styles for Expressive Rendering.
+        - [x] [ZhaoLucen] Implement a curved brush that follows the image gradient. See Painterly Styles for Expressive Rendering.
 
             - [ ]  Given a source image, construct a new image that is really a mosaic of small (thumbnail) images. To do this, you need to partition the original into tiles and find new thumbnails that are reasonable matches to the tiles. Then draw the new image by substituting the thumbnails for the tiles. See, for example, Adam Finkelsteins Web Gothic. Credit will vary depending on the success of your method.
 

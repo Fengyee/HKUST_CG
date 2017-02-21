@@ -63,6 +63,8 @@ public:
 	Fl_Slider*			m_EdgeThresholdSlider;
 	Fl_Button*			m_DoItButton;
 	Fl_Slider*			m_MosaicSlider;
+	Fl_Slider*			m_ResolutionSlider;
+	Fl_Button*			m_RePaintButton;
 
 	// filterDialog
 //	Fl_Button*			m_FilterSize;
@@ -93,6 +95,7 @@ public:
 	int					getSpacing();
 	void				setAlphaMappedBrushState();
 	int					getEdgeThreshold();
+	int					getResolution();
 
 	void				setRand(int rand);
 	int					getRand();
@@ -115,16 +118,13 @@ private:
 	int		m_nMosasiLevel;
 	int		m_nSpacing;
 	int		m_nRand;
-<<<<<<< HEAD
 	int		m_nEdgeThreshold;
-=======
 	int		m_nFilterWidth;
 	int		m_nFilterHeight;
 	char*	m_nFilterValue;
 	int		m_nFilterApply;
 	int*	m_nFilter;
-
->>>>>>> origin/master
+	int		m_nResolution;
 
 
 	// Static class members
@@ -158,17 +158,16 @@ private:
 	static void cb_color_selector(Fl_Menu_* o, void * v);
 	static void	cb_mosaicSlides(Fl_Widget* o, void* v);
 	static void cb_loadAlphaMappedImage(Fl_Menu_* o, void* v);
-<<<<<<< HEAD
 	static void cb_edge_threshold(Fl_Widget* o, void* v);
-	static void cb_recal_edge(Fl_Menu_* o, void* v);
-=======
+	static void cb_recal_edge(Fl_Widget* o, void* v);
 	static void cb_filter_kernel(Fl_Menu_* o, void* v);
 	static void cb_filter_apply(Fl_Widget* o, void* v);
 	static void cb_filterWidthInput(Fl_Widget* o, void* v);
 	static void cb_filterHeightInput(Fl_Widget* o, void* v);
 	static void cb_filter_value(Fl_Widget* o, void* v);
 	static void	cb_filter_normal_button(Fl_Widget* o, void* v);
->>>>>>> origin/master
+	static void cb_resolution_slider(Fl_Widget* o, void* v);
+	static void cb_re_paint_button(Fl_Widget* o, void* v);
 };
 
 #endif

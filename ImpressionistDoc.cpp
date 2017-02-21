@@ -214,7 +214,7 @@ int ImpressionistDoc::getRand()
 	return m_pUI->getRand();
 }
 
-<<<<<<< HEAD
+
 void ImpressionistDoc::recalEdgeImg()
 {
 	if (m_ucEdgeImg)
@@ -229,7 +229,13 @@ void ImpressionistDoc::recalEdgeImg()
 			}
 		}
 	}
-=======
+}
+
+void ImpressionistDoc::rePaint()
+{
+	m_pUI->m_paintView->rePaint();
+}
+
 int	ImpressionistDoc::getFilter()
 {
 	return m_pUI->getFilter();
@@ -242,7 +248,11 @@ int	ImpressionistDoc::getFilterHeight() {
 }
 int ImpressionistDoc::getFilterWidth() {
 	return m_pUI->getFilterWidth();
->>>>>>> origin/master
+
+}
+
+int ImpressionistDoc::getResolution() {
+	return m_pUI->getResolution();
 }
 //---------------------------------------------------------
 // Load the specified image

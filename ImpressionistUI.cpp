@@ -317,9 +317,6 @@ void ImpressionistUI::cb_auto_paint(Fl_Widget* o, void* v)
 void ImpressionistUI::cb_size_rand(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
-//	if (ImpressionistUI::getRand() == 0)
-//	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
-	//printf("%d", int(((Fl_Light_Button *)o)->value()));
 }
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
@@ -386,7 +383,7 @@ void ImpressionistUI::cb_edge_threshold(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nEdgeThreshold = int(((Fl_Slider *)o)->value());
 }
 
-void ImpressionistUI::cb_recal_edge(Fl_Menu_* o, void* v)
+void ImpressionistUI::cb_recal_edge(Fl_Widget* o, void* v)
 {
 	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
 
@@ -431,7 +428,6 @@ void ImpressionistUI::cb_filter_normal_button(Fl_Widget* o, void* v)
 				s1.append("1;\n");
 		}
 	}
-	//std::cout << s1 << std::endl;
 	
 	((ImpressionistUI*)(o->user_data()))->m_nFilterValue = new char[s1.size() + 1]; 
 	std::copy(s1.begin(), s1.end(), ((ImpressionistUI*)(o->user_data()))->m_nFilterValue);
@@ -510,10 +506,20 @@ bool ImpressionistUI::construct_filter(char* filter_data, int filter_width, int 
 		delete[] m_nFilter;
 		return false;
 	}
-	for (int i = 0; i < filter_height*filter_width; ++i)
-			printf("%d", m_nFilter[i]);
 	return true;
 }
+
+void ImpressionistUI::cb_resolution_slider(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nResolution = int(((Fl_Slider *)o)->value());
+}
+
+void ImpressionistUI::cb_re_paint_button(Fl_Widget* o, void* v)
+{
+	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
+	pDoc->rePaint();
+}
+
 //---------------------------------- per instance functions --------------------------------------
 
 //------------------------------------------------
@@ -609,6 +615,10 @@ int* ImpressionistUI::getFilterValue()
 	return m_nFilter;
 }
 
+int ImpressionistUI::getResolution()
+{
+	return m_nResolution;
+}
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -623,7 +633,6 @@ void ImpressionistUI::setSize(int size)
 void ImpressionistUI::setLineWidth(int width)
 {
 	m_nLineWidth = width;
-
 	if (width <= 40)
 		m_BrushLineWidthSlider->value(m_nLineWidth);
 }
@@ -754,21 +763,19 @@ ImpressionistUI::ImpressionistUI() {
 	m_nMosasiLevel = 5;
 	m_nSpacing = 1;
 	m_nRand = 0;
-<<<<<<< HEAD
 	m_nEdgeThreshold = 200;
-=======
 	m_nFilterHeight = 3;
 	m_nFilterWidth = 3;
 	m_nFilterApply = 0;
 	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;";
+	m_nResolution = 3;
 	
 //	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;"
->>>>>>> origin/master
 
 	m_nBrushDirection = SLIDER_AND_RIGHT_MOUSE;
 
 	// brush dialog definition
-	m_brushDialog = new Fl_Window(400, 355, "Brush Dialog");
+	m_brushDialog = new Fl_Window(400, 380, "Brush Dialog");
 	// Add a brush type choice to the dialog
 	m_BrushTypeChoice = new Fl_Choice(50, 10, 150, 25, "&Brush");
 	m_BrushTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
@@ -868,7 +875,23 @@ ImpressionistUI::ImpressionistUI() {
 	m_PaintButton->user_data((void*)(this));
 	m_PaintButton->callback(cb_auto_paint);
 
-	m_EdgeThresholdSlider = new Fl_Value_Slider(10, 275, 170, 25, "Edge Threshold");
+	m_ResolutionSlider = new Fl_Value_Slider(10, 275, 160, 25, "Resolution Level");
+	m_ResolutionSlider->user_data((void*)(this));
+	m_ResolutionSlider->type(FL_HOR_NICE_SLIDER);
+	m_ResolutionSlider->labelfont(FL_COURIER);
+	m_ResolutionSlider->labelsize(12);
+	m_ResolutionSlider->minimum(1);
+	m_ResolutionSlider->maximum(5);
+	m_ResolutionSlider->step(1);
+	m_ResolutionSlider->value(m_nResolution);
+	m_ResolutionSlider->align(FL_ALIGN_RIGHT);
+	m_ResolutionSlider->callback(cb_resolution_slider);
+
+	m_RePaintButton = new Fl_Button(320, 275, 70, 25, "&Paint(R)");
+	m_RePaintButton->user_data((void*)(this));
+	m_RePaintButton->callback(cb_re_paint_button);
+
+	m_EdgeThresholdSlider = new Fl_Value_Slider(10, 310, 170, 25, "Edge Threshold");
 	m_EdgeThresholdSlider->user_data((void*)(this));
 	m_EdgeThresholdSlider->type(FL_HOR_NICE_SLIDER);
 	m_EdgeThresholdSlider->labelfont(FL_COURIER);
@@ -880,11 +903,11 @@ ImpressionistUI::ImpressionistUI() {
 	m_EdgeThresholdSlider->align(FL_ALIGN_RIGHT);
 	m_EdgeThresholdSlider->callback(cb_edge_threshold);
 
-	m_DoItButton = new Fl_Button(340, 275, 50, 25, "&Do it");
+	m_DoItButton = new Fl_Button(340, 310, 50, 25, "&Do it");
 	m_DoItButton->user_data((void*)(this));
 	m_DoItButton->callback(cb_recal_edge);
 	
-	m_MosaicSlider = new Fl_Value_Slider(10, 310, 300, 20, "Mosaic Level");
+	m_MosaicSlider = new Fl_Value_Slider(10, 345, 300, 20, "Mosaic Level");
 	m_MosaicSlider->user_data((void*)(this));	// record self to be used by static callback functions
 	m_MosaicSlider->type(FL_HOR_NICE_SLIDER);
 	m_MosaicSlider->labelfont(FL_COURIER);

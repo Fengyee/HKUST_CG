@@ -34,6 +34,9 @@ public:
 	void	recalEdgeImg();
 	void	setDisplayImage(int type);
 
+	void	rePaint();
+
+
 	int		getSize();						
 	void	setSize(int size);				
 	int		getLineWidth();					
@@ -49,6 +52,7 @@ public:
 	int*	getFilterValue();
 	int		getFilterHeight();
 	int		getFilterWidth();
+	int		getResolution();
 
 	char*	getImageName();					// get the current image name
 	

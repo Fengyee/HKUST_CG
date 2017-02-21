@@ -71,6 +71,8 @@ public:
 	Fl_Slider*			m_EdgeThresholdSlider;
 	Fl_Button*			m_DoItButton;
 	Fl_Slider*			m_MosaicSlider;
+	Fl_Slider*			m_ResolutionSlider;
+	Fl_Button*			m_RePaintButton;
 
 	// filterDialog
 //	Fl_Button*			m_FilterSize;
@@ -101,6 +103,7 @@ public:
 	int					getSpacing();
 	void				setAlphaMappedBrushState();
 	int					getEdgeThreshold();
+	int					getResolution();
 
 	void				setRand(int rand);
 	int					getRand();
@@ -130,6 +133,7 @@ private:
 	int		m_nFilterApply;
 	int*	m_nFilter;
 	bool	m_bEdgeClipping;
+	int		m_nResolution;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
@@ -172,7 +176,8 @@ private:
 	static void	cb_filter_normal_button(Fl_Widget* o, void* v);
 	static void cb_imageChoice(Fl_Menu_* o, void* v);
 	static void cb_edgeclipping_button(Fl_Widget* o, void* v);
-
+	static void cb_resolution_slider(Fl_Widget* o, void* v);
+	static void cb_re_paint_button(Fl_Widget* o, void* v);
 };
 
 #endif

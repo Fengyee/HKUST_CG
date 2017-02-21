@@ -258,7 +258,12 @@ void ImpressionistDoc::recalEdgeImg()
 	{
 		m_pUI->m_origView->refresh();
 	}
-		
+
+}
+
+void ImpressionistDoc::rePaint()
+{
+	m_pUI->m_paintView->rePaint();
 }
 
 int	ImpressionistDoc::getFilter()
@@ -273,6 +278,10 @@ int	ImpressionistDoc::getFilterHeight() {
 }
 int ImpressionistDoc::getFilterWidth() {
 	return m_pUI->getFilterWidth();
+}
+
+int ImpressionistDoc::getResolution() {
+	return m_pUI->getResolution();
 }
 //---------------------------------------------------------
 // Load the specified image

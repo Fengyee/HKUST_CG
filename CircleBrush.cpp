@@ -45,9 +45,9 @@ void CircleBrush::BrushMove(const Point source, const Point target)
 
 	glBegin(GL_POLYGON);
 	SetColor(source);
-	for (int i = 0; i < 360; i++)
+	for (int i = 0; i < 90; i++)
 	{
-		float degInRad = i * M_PI / 180.0;
+		float degInRad = i * 4 * M_PI / 180.0;
 		glVertex2f(target.x + cos(degInRad)*radius, target.y + sin(degInRad)*radius);
 	}
 

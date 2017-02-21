@@ -41,7 +41,7 @@
 
 - [ ]  [Fengyee] Use the image processing techniques described in class to automatically find the edges in the base image. Once you have found the edges, add a button to the user interface that will allow the user to select whether or not the brush strokes should be clipped to the edges in the picture.
 
-- [ ] Implement a multiresolution automatic painting technique. See Painterly Styles for Expressive Rendering.
+- [x] Implement a multiresolution automatic painting technique. See Painterly Styles for Expressive Rendering.
 
     - [ ]  Design a brush that can be used to stretch and pull the image as if it were rubber. See Warp George Bush.
 

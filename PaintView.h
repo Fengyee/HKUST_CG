@@ -39,6 +39,8 @@ public:
 
 	void autoPainting();
 
+	void rePaint();
+
 	ImpressionistDoc *m_pDoc;
 
 private:

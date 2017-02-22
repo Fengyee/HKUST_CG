@@ -41,6 +41,8 @@ public:
 
 	void rePaint();
 
+	void multiPaint(int spacing, bool first);
+
 	ImpressionistDoc *m_pDoc;
 
 private:

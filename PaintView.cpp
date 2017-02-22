@@ -322,10 +322,8 @@ void PaintView::RestoreUndoContent()
 		//std::cout << "finish memcpy" << std::endl;
 	}
 	RestoreContent();
-	glFlush();
-		
-	//SaveCurrentContent();
-	//RestoreContent();
+//	glFlush();
+	redraw();
 }
 
 void PaintView::autoPainting()
@@ -348,17 +346,16 @@ void PaintView::autoPainting()
 	std::random_shuffle(rand_order.begin(), rand_order.end());
 
 	//isAnEvent = 0;
-
-#ifndef MESA
+	
 	// To avoid flicker on some machines.
 	glDrawBuffer(GL_FRONT_AND_BACK);
-#endif // !MESA
 
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// glShadeModel(GL_FLAT);
 	// glClearColor(0.0, 0.0, 0.0, 0.0);
+	
 	if (m_pDoc->getRand() == 0)
 	{
 
@@ -395,33 +392,117 @@ void PaintView::autoPainting()
 			
 	}
 	//std::cout << isAnEvent << ' ';
-	isAnEvent = 1;
-	redraw();
+//	isAnEvent = 1;
+//	redraw();
+
+
 	SaveCurrentContent();
+	m_pDoc->m_pUI->m_origView->redraw();
+	redraw();
 	RestoreContent();
 
 
 
-	glFlush();
+//	glFlush();
 
 	//std::cout << isAnEvent << std::endl;
+
+	// To avoid flicker on some machines.
+	glDrawBuffer(GL_BACK);
+
+
+
+//	m_nStartRow = startrow;
+//	m_nEndRow = startrow + drawHeight;
+//	m_nStartCol = scrollpos.x;
+//	m_nEndCol = m_nStartCol + drawWidth;
+
+	
+}
+
+void PaintView::multiPaint(int spacing, bool first=false)
+{
+	GLubyte pixel_original[4];
+	GLubyte pixel_draw[4];
+
+#ifndef MESA
+	// To avoid flicker on some machines.
+	glDrawBuffer(GL_FRONT_AND_BACK);
+#endif // !MESA
+
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	std::cout << first << std::endl;
+
+	
+	int x_num = m_pDoc->m_nPaintWidth / spacing + 1;
+	int y_num = m_pDoc->m_nPaintHeight / spacing + 1;
+
+	// Generate a random vector for random painting order
+	std::vector<int> rand_order;
+	for (int i = 0; i < x_num * y_num; i++)
+	{
+		rand_order.push_back(i);
+	}
+	std::random_shuffle(rand_order.begin(), rand_order.end());
+
+
+	int originSize = m_pDoc->getSize();
+
+	for (std::vector<int>::iterator it = rand_order.begin(); it != rand_order.end(); ++it)
+	{
+		int cor_x = *it % x_num * spacing;
+		int cor_y = *it / x_num * spacing;
+
+		if (strcmp(m_pDoc->m_pCurrentBrush->BrushName(), "Curved") != 0)
+		{
+			int currentSize = (rand() % originSize) + ((originSize + 1) / 2);
+			m_pDoc->setSize(currentSize);
+		}
+
+		Point auto_source(cor_x + m_nStartCol, m_nEndRow - cor_y);
+		Point auto_target(cor_x, m_nWindowHeight - cor_y);
+
+		if (!first) {
+			memcpy(pixel_original, m_pDoc->GetOriginalPixel(auto_source.x, auto_source.y), 3);
+			memcpy(pixel_draw, (GLubyte*)(m_pDoc->m_ucPainting + 3 * (auto_target.y*m_pDoc->m_nWidth + auto_target.x)), 3);
+			//glReadPixels(auto_target.x, auto_target.y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel_draw);
+			//std::cout << (int)pixel_draw[0] << (int)pixel_draw[1] << (int)pixel_draw[2] << std::endl;
+			//std::cout << (int)pixel_original[0] << (int)pixel_original[1] << (int)pixel_original[2] << std::endl;
+			if (abs(pixel_original[0] - pixel_draw[0]) < 5 && abs(pixel_original[1] - pixel_draw[1]) < 5 && abs(pixel_original[2] - pixel_draw[2]) < 5) {
+				continue;
+			}
+
+		}
+
+		m_pDoc->m_pCurrentBrush->BrushBegin(auto_source, auto_target);
+		
+	}
+
+
+
+	//std::cout << isAnEvent << ' ';
+	//isAnEvent = 1;
+	//redraw();
+
+	SaveCurrentContent();
+	RestoreContent();
+	redraw();
+	m_pDoc->m_pUI->m_origView->redraw();
+
+	std::cout << first << std::endl;
 
 #ifndef MESA
 	// To avoid flicker on some machines.
 	glDrawBuffer(GL_BACK);
 #endif // !MESA
-//	m_nStartRow = startrow;
-//	m_nEndRow = startrow + drawHeight;
-//	m_nStartCol = scrollpos.x;
-//	m_nEndCol = m_nStartCol + drawWidth;
 }
 
 void PaintView::rePaint()
 {
-
 	//isAnEvent = 0;
-	GLubyte pixel_original[4];
-	GLubyte pixel_draw[4];
+
 	glReadBuffer(GL_FRONT);
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -456,30 +537,10 @@ void PaintView::rePaint()
 	int resol = m_pDoc->getResolution();
 	for (int j = 0; j < resol; j++)
 	{
-#ifndef MESA
-		// To avoid flicker on some machines.
-		glDrawBuffer(GL_FRONT_AND_BACK);
-#endif // !MESA
-
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		std::cout << j << std::endl;
-		
-		if (j != 0) spacing = (spacing + 1) / 2;
-		int x_num = m_pDoc->m_nPaintWidth / spacing + 1;
-		int y_num = m_pDoc->m_nPaintHeight / spacing + 1;
-
-		// Generate a random vector for random painting order
-		std::vector<int> rand_order;
-		for (int i = 0; i < x_num * y_num; i++)
-		{
-			rand_order.push_back(i);
-		}
-		std::random_shuffle(rand_order.begin(), rand_order.end());
-
 		if (j != 0)
 		{
+			spacing = (spacing + 1) / 2;
+
 			if (strcmp(m_pDoc->m_pCurrentBrush->BrushName(), "Curved") == 0)
 			{
 				m_pDoc->setSize((m_pDoc->getSize() + 1 - 40) / 2 + 40);
@@ -490,53 +551,13 @@ void PaintView::rePaint()
 				m_pDoc->setSize((m_pDoc->getSize() + 1) / 2);
 				m_pDoc->setLineWidth((m_pDoc->getLineWidth() + 1) / 2);
 			}
-		}
-		int originSize = m_pDoc->getSize();
 
-		for (std::vector<int>::iterator it = rand_order.begin(); it != rand_order.end(); ++it)
+			multiPaint(spacing);
+		}
+		else
 		{
-			int cor_x = *it % x_num * spacing;
-			int cor_y = *it / x_num * spacing;
-
-			if (strcmp(m_pDoc->m_pCurrentBrush->BrushName(), "Curved") != 0)
-			{
-				int currentSize = (rand() % originSize) + ((originSize + 1) / 2);
-				m_pDoc->setSize(currentSize);
-			}
-
-			Point auto_source(cor_x + m_nStartCol, m_nEndRow - cor_y);
-			Point auto_target(cor_x, m_nWindowHeight - cor_y);
-
-			if (j != 0) {
-				memcpy(pixel_original, m_pDoc->GetOriginalPixel(auto_source.x, auto_source.y), 3);
-				memcpy(pixel_draw, (GLubyte*)(m_pDoc->m_ucPainting + 3 * (auto_target.y*m_pDoc->m_nWidth + auto_target.x)), 3);
-				//glReadPixels(auto_target.x, auto_target.y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel_draw);
-				//std::cout << (int)pixel_draw[0] << (int)pixel_draw[1] << (int)pixel_draw[2] << std::endl;
-				//std::cout << (int)pixel_original[0] << (int)pixel_original[1] << (int)pixel_original[2] << std::endl;
-				if (abs(pixel_original[0] - pixel_draw[0]) < 5 && abs(pixel_original[1] - pixel_draw[1]) < 5 && abs(pixel_original[2] - pixel_draw[2]) < 5) {
-					continue;
-				}
-					
-			}
-
-			m_pDoc->m_pCurrentBrush->BrushBegin(auto_source, auto_target);
+			multiPaint(spacing, true);
 		}
-
-
-
-		//std::cout << isAnEvent << ' ';
-		//isAnEvent = 1;
-		//redraw();
-		SaveCurrentContent();
-		RestoreContent();
-
-		std::cout << j << std::endl;
-
-		glFlush();
-#ifndef MESA
-		// To avoid flicker on some machines.
-		glDrawBuffer(GL_BACK);
-#endif // !MESA
 
 	}
 
@@ -546,6 +567,7 @@ void PaintView::rePaint()
 	m_pDoc->setSize(size);
 	m_pDoc->setLineWidth(width);
 
+	
 	//std::cout << isAnEvent << std::endl;
 
 

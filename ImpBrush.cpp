@@ -113,7 +113,15 @@ double ImpBrush::calcAngle(ImpressionistDoc* pDoc, const Point source_prev, cons
 			for (int j = 0; j < 3; j++) {
 				memcpy(pixel_cur, pDoc->GetOriginalPixel(source.x - 1 + i, source.y - 1 + j), 3);
 				//glReadPixels(source.x-1+i, source.y-1+j, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel_cur);
-				pixels_bw = (pixel_cur[0] + pixel_cur[1] + pixel_cur[2]) / 3;
+				if (source.x - 1 + j >= 0 && source.y - 1 + i >= 0 && source.x - 1 + j <= pDoc->m_nPaintWidth && source.y - 1 + i <= pDoc->m_nPaintHeight)
+				{
+					pixels_bw = (pixel_cur[0] + pixel_cur[1] + pixel_cur[2]) / 3;
+				}
+				else
+				{
+					pixels_bw = 0;
+				}
+				
 				x_conv = x_conv + (int)pixels_bw * filter_x[i][j];
 				y_conv = y_conv + (int)pixels_bw * filter_y[i][j];
 				//std::cout << (int)pixels_bw << filter_x[i][j] << filter_y[i][j] << std::endl;

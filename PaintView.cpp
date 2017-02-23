@@ -435,7 +435,7 @@ void PaintView::multiPaint(int spacing, bool first=false)
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	std::cout << first << std::endl;
+	//std::cout << first << std::endl;
 
 	
 	int x_num = m_pDoc->m_nPaintWidth / spacing + 1;
@@ -493,7 +493,7 @@ void PaintView::multiPaint(int spacing, bool first=false)
 	redraw();
 	m_pDoc->m_pUI->m_origView->redraw();
 
-	std::cout << first << std::endl;
+	//std::cout << first << std::endl;
 
 #ifndef MESA
 	// To avoid flicker on some machines.
@@ -525,7 +525,7 @@ void PaintView::rePaint()
 	{
 		if ((strcmp(m_pDoc->m_pCurrentBrush->BrushName(), "Lines") == 0) || (strcmp(m_pDoc->m_pCurrentBrush->BrushName(), "Scattered Lines") == 0))
 		{
-			printf("setting line\n");
+			//printf("setting line\n");
 			m_pDoc->setSize(50);
 			m_pDoc->setLineWidth(24);
 			spacing = 12;

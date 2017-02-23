@@ -318,6 +318,19 @@ void ImpressionistUI::cb_size_rand(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_nRand = int(((Fl_Light_Button *)o)->value());
 }
+
+void ImpressionistUI::cb_mural(Fl_Widget* o, void* v)
+{
+	if (int(((Fl_Light_Button *)o)->value()) == 1) {
+		ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
+		if (!pDoc->m_ucAnotherImg) {
+			((Fl_Light_Button *)o)->value(0);
+			fl_alert("There is no another image for mural effect!");
+		}
+	}
+	((ImpressionistUI*)(o->user_data()))->m_nMural = int(((Fl_Light_Button *)o)->value());
+	
+}
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
 // slider
@@ -403,21 +416,25 @@ void ImpressionistUI::setAlphaMappedBrushState()
 void ImpressionistUI::cb_filterWidthInput(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_FilterApply->value(0);
+	((ImpressionistUI*)(o->user_data()))->m_nFilterApply = 0;
 	((ImpressionistUI*)(o->user_data()))->m_nFilterWidth = int(((Fl_Value_Input *)o)->value());
 }
 void ImpressionistUI::cb_filterHeightInput(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_FilterApply->value(0);
+	((ImpressionistUI*)(o->user_data()))->m_nFilterApply = 0;
 	((ImpressionistUI*)(o->user_data()))->m_nFilterHeight = int(((Fl_Value_Input *)o)->value());
 }
 void ImpressionistUI::cb_filter_value(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_FilterApply->value(0);
+	((ImpressionistUI*)(o->user_data()))->m_nFilterApply = 0;
 	((ImpressionistUI*)(o->user_data()))->m_nFilterValue = strdup(((Fl_Multiline_Input *)o)->value());
 }
 void ImpressionistUI::cb_filter_normal_button(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_FilterApply->value(0);
+	((ImpressionistUI*)(o->user_data()))->m_nFilterApply = 0;
 	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
 
 	int filter_width = ((ImpressionistUI*)(o->user_data()))->m_nFilterWidth;
@@ -448,6 +465,8 @@ void ImpressionistUI::cb_filter_apply(Fl_Widget* o, void* v)
 		if (filter_width <= 0 || filter_height <= 0)
 		{
 			fl_alert("Invalid size of filter kernel");
+			((ImpressionistUI*)(o->user_data()))->m_nFilterApply = 0;
+			((Fl_Light_Button *)o)->value(0);
 			return;
 		}
 		char* filter_value = ((ImpressionistUI*)(o->user_data()))->m_nFilterValue;
@@ -455,6 +474,7 @@ void ImpressionistUI::cb_filter_apply(Fl_Widget* o, void* v)
 		if (!((ImpressionistUI*)(o->user_data()))->construct_filter(filter_value, filter_width, filter_height))
 		{
 			fl_alert("Invalid input for filter kernel");
+			((ImpressionistUI*)(o->user_data()))->m_nFilterApply = 0;
 			((Fl_Light_Button *)o)->value(0);
 			return;
 		}
@@ -613,6 +633,11 @@ int ImpressionistUI::getSpacing()
 int ImpressionistUI::getRand()
 {
 	return m_nRand;
+}
+
+int ImpressionistUI::getMural()
+{
+	return m_nMural;
 }
 
 int ImpressionistUI::getFilterHeight()
@@ -794,6 +819,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_nFilterApply = 0;
 	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;";
 	m_nResolution = 3;
+	m_nMural = 0;
 	
 //	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;"
 
@@ -813,6 +839,11 @@ ImpressionistUI::ImpressionistUI() {
 	m_StrokeDirectionChoice->menu(directionTypeMenu);
 	m_StrokeDirectionChoice->callback(cb_StrokeDirectionChoice);
 	m_StrokeDirectionChoice->deactivate();
+
+	m_Mural = new Fl_Light_Button(273, 40, 70, 25, "Mural");
+	m_Mural->user_data((void*)(this));
+	m_Mural->value(m_nMural);
+	m_Mural->callback(cb_mural);
 
 	m_ClearCanvasButton = new Fl_Button(240, 10, 150, 25, "&Clear Canvas");
 	m_ClearCanvasButton->user_data((void*)(this));

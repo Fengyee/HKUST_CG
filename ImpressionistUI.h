@@ -73,6 +73,7 @@ public:
 	Fl_Slider*			m_MosaicSlider;
 	Fl_Slider*			m_ResolutionSlider;
 	Fl_Button*			m_RePaintButton;
+	Fl_Button*			m_Mural;
 
 	// filterDialog
 //	Fl_Button*			m_FilterSize;
@@ -113,6 +114,7 @@ public:
 	int*				getFilterValue();
 	bool				construct_filter(char* filter_data, int filter_width, int filter_height);
 	bool				getEdgeClipping();
+	int					getMural();
 
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
@@ -134,6 +136,7 @@ private:
 	int*	m_nFilter;
 	bool	m_bEdgeClipping;
 	int		m_nResolution;
+	int		m_nMural;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
@@ -178,6 +181,7 @@ private:
 	static void cb_edgeclipping_button(Fl_Widget* o, void* v);
 	static void cb_resolution_slider(Fl_Widget* o, void* v);
 	static void cb_re_paint_button(Fl_Widget* o, void* v);
+	static void cb_mural(Fl_Widget* o, void* v);
 };
 
 #endif

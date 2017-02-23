@@ -283,6 +283,10 @@ int ImpressionistDoc::getFilterWidth() {
 int ImpressionistDoc::getResolution() {
 	return m_pUI->getResolution();
 }
+
+int ImpressionistDoc::getMural() {
+	return m_pUI->getMural();
+}
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 
@@ -500,6 +504,25 @@ GLubyte* ImpressionistDoc::GetOriginalPixel(int x, int y)
 	return (GLubyte*)(m_ucBitmap + 3 * (y*m_nWidth + x));
 }
 
+GLubyte* ImpressionistDoc::GetAnotherPixel(int x, int y)
+{
+	if (x < 0)
+		x = 0;
+	else if (x >= m_nWidth)
+		x = m_nWidth - 1;
+
+	if (y < 0)
+		y = 0;
+	else if (y >= m_nHeight)
+		y = m_nHeight - 1;
+
+	return (GLubyte*)(m_ucAnotherImg + 3 * (y*m_nWidth + x));
+}
+
+GLubyte* ImpressionistDoc::GetAnotherPixel(const Point p)
+{
+	return GetAnotherPixel(p.x, p.y);
+}
 //----------------------------------------------------------------
 // Get the color of the pixel in the original image at point p
 //----------------------------------------------------------------

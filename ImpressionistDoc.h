@@ -53,6 +53,7 @@ public:
 	int		getFilterHeight();
 	int		getFilterWidth();
 	int		getResolution();
+	int		getMural();
 
 	char*	getImageName();					// get the current image name
 	
@@ -103,6 +104,8 @@ public:
 	GLubyte* GetOriginalPixel( const Point p );  
 
 	GLubyte* GetDisplayPixel(int x, int y);
+	GLubyte* GetAnotherPixel(int x, int y);
+	GLubyte* GetAnotherPixel(const Point p);
 
 
 private:

@@ -53,7 +53,13 @@ void ImpBrush::SetColor (const Point source)
 	int g_conv = 0;
 	int b_conv = 0;
 	if (pDoc->getFilter() == 0) {
-		memcpy(color, pDoc->GetOriginalPixel(source), 3);
+		if (pDoc->getMural()) {
+			memcpy(color, pDoc->GetAnotherPixel(source), 3);
+		}
+		else {
+			memcpy(color, pDoc->GetOriginalPixel(source), 3);
+		}
+		
 	}
 	else {
 		int filterHeight = pDoc->getFilterHeight();
@@ -63,7 +69,13 @@ void ImpBrush::SetColor (const Point source)
 		int offset_y = filterHeight / 2;
 		for (int i = 0; i < filterHeight; i++) {
 			for (int j = 0; j < filterWidth; j++) {
-				memcpy(pixel_cur, pDoc->GetOriginalPixel(source.x - offset_x + i, source.y - offset_y + j), 3);
+				if (pDoc->getMural()) {
+					memcpy(pixel_cur, pDoc->GetAnotherPixel(source.x - offset_x + i, source.y - offset_y + j), 3);
+				}
+				else {
+					memcpy(pixel_cur, pDoc->GetOriginalPixel(source.x - offset_x + i, source.y - offset_y + j), 3);
+				}
+				
 				//glReadPixels(source.x-1+i, source.y-1+j, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel_cur);
 				//pixels_bw = (pixel_cur[0] + pixel_cur[1] + pixel_cur[2]) / 3;
 				r_conv = r_conv + (int)pixel_cur[0] * filterValue[i*filterWidth+j];

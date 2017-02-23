@@ -172,8 +172,9 @@ void PaintView::draw()
 		case RIGHT_MOUSE_UP:
 			if (m_pDoc->m_nBrushDirection == SLIDER_AND_RIGHT_MOUSE) {
 				RestoreContent();
-
-				m_pDoc->setLineAngle((int)((atan((float)(source.y - right_mouse_source.y) / (float)(source.x - right_mouse_source.x))) * 180 / M_PI));
+				int angle = (int)((atan((float)(source.y - right_mouse_source.y) / (float)(source.x - right_mouse_source.x))) * 180 / M_PI);
+				if (angle < 0) angle = angle + 360;
+				m_pDoc->setLineAngle(angle);
 			}
 			break;
 
@@ -294,6 +295,7 @@ void PaintView::SaveUndoContent()
 	if (m_pDoc->m_ucPainting) {
 		memcpy(m_pDoc->m_ucUndoBitstart, m_pPaintBitstart, m_pDoc->m_nPaintWidth * m_pDoc->m_nPaintHeight * 3);
 	}
+	//printf("called");
 
 }
 

@@ -67,8 +67,45 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 
 		glBegin(GL_LINES);
 		SetColor(s);
-		glVertex2f(ax, ay);
-		glVertex2f(bx, by);
+		if (!dlg->getEdgeClipping())
+		{
+			glVertex2f(ax, ay);
+			glVertex2f(bx, by);
+		}
+		else
+		{
+			Point end;
+			end.x = t.x;
+			end.y = t.y;
+			bool drawOnEdge = pDoc->m_ucEdgeImg[(t.y * pDoc->m_nWidth + t.x) * 3] != 0;
+			for (int i = 0; i <= size / 2; i++)
+			{
+				end.x = t.x - i * cos(angle);
+				end.y = t.y - i * sin(angle);
+				if (end.x <= 0 || end.x >= pDoc->m_nWidth
+					|| end.y <= 0 || end.y >= pDoc->m_nHeight
+					|| !drawOnEdge && (pDoc->m_ucEdgeImg[3 * (end.x + end.y * pDoc->m_nWidth)] != 0))
+				{
+					break;
+				}
+			}
+
+			glVertex2d(end.x, end.y);
+			end.x = t.x;
+			end.y = t.y;
+			for (int i = 0; i <= size / 2; i++)
+			{
+				end.x = t.x + i * cos(angle);
+				end.y = t.y + i * sin(angle);
+				if (end.x <= 0 || end.x >= pDoc->m_nWidth
+					|| end.y <= 0 || end.y >= pDoc->m_nHeight
+					|| !drawOnEdge && (pDoc->m_ucEdgeImg[3 * (end.x + end.y * pDoc->m_nWidth)] != 0))
+				{
+					break;
+				}
+			}
+			glVertex2d(end.x, end.y);
+		}
 		glEnd();
 	}
 	source_prev_s.x = source.x;

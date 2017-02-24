@@ -85,7 +85,7 @@ public:
 	// The current active brush.
 	ImpBrush*		m_pCurrentBrush;
 
-	int m_nBrushDirection;
+	int m_nBrushDirection = SLIDER_AND_RIGHT_MOUSE;
 	// Size of the brush.
 	int m_nSize;
 	int m_nLineWidth;

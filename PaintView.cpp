@@ -124,7 +124,6 @@ void PaintView::draw()
 		//std::cout << source.x << ' ' << source.y << std::endl;
 		// printf("start column: %d; Start row: %d", m_nStartCol, m_nStartRow);
 
-
 		// This is the event handler
 		switch (eventToDo) 
 		{
@@ -174,6 +173,8 @@ void PaintView::draw()
 				int angle = (int)((atan((float)(source.y - right_mouse_source.y) / (float)(source.x - right_mouse_source.x))) * 180 / M_PI);
 				if (angle < 0) angle = angle + 360;
 				m_pDoc->setLineAngle(angle);
+				int size = (int)sqrt((source.y - right_mouse_source.y) * (source.y - right_mouse_source.y) + (source.x - right_mouse_source.x) * (source.x - right_mouse_source.x));
+				m_pDoc->setSize(size);
 			}
 			break;
 

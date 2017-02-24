@@ -91,7 +91,13 @@ void CurvedBrush::BrushMove(const Point source, const Point target)
 			y_conv = 0;
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					memcpy(pixel_cur, pDoc->GetOriginalPixel(ax - 1 + j, ay - 1 + i), 3);
+					if (pDoc->getAnotherGradient()) {
+						memcpy(pixel_cur, pDoc->GetAnotherPixel(ax - 1 + j, ay - 1 + i), 3);
+					}
+					else {
+						memcpy(pixel_cur, pDoc->GetOriginalPixel(ax - 1 + j, ay - 1 + i), 3);
+					}
+					
 					if (ax - 1 + j >= 0 && ay - 1 + i >= 0 && ax-1+j <= pDoc->m_nPaintWidth && ay-1+i <= pDoc->m_nPaintHeight)
 					{
 						pixels_bw = (pixel_cur[0] + pixel_cur[1] + pixel_cur[2]) / 3;
@@ -111,7 +117,7 @@ void CurvedBrush::BrushMove(const Point source, const Point target)
 				}
 			}
 			//float grad = sqrt(x_conv * x_conv + y_conv * y_conv);
-			if (y_conv != 0)
+			if (x_conv != 0)
 				angle = atan((float)(y_conv) / (float)(x_conv)) + M_PI / 2;		//angle of drawing !!! not gradient !!!
 			else
 				angle = 0;

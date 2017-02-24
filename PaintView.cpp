@@ -60,7 +60,6 @@ void PaintView::draw()
 	//fl_push_no_clip();
 	//fl_pop_clip();
 	//fl_push_clip(x(), y(), m_nDrawWidth, m_nDrawHeight);
-
 	if(!valid())
 	{
 
@@ -204,11 +203,12 @@ int PaintView::handle(int event)
 	case FL_PUSH:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
+		
 		if (Fl::event_button()>1)
 			eventToDo=RIGHT_MOUSE_DOWN;
 		else
 			eventToDo=LEFT_MOUSE_DOWN;
-		isAnEvent=1;
+		isAnEvent = 1;
 		redraw();
 		break;
 	case FL_DRAG:
@@ -295,7 +295,6 @@ void PaintView::SaveUndoContent()
 	if (m_pDoc->m_ucPainting) {
 		memcpy(m_pDoc->m_ucUndoBitstart, m_pPaintBitstart, m_pDoc->m_nPaintWidth * m_pDoc->m_nPaintHeight * 3);
 	}
-	//printf("called");
 
 }
 

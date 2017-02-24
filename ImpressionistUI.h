@@ -115,6 +115,7 @@ public:
 	bool				construct_filter(char* filter_data, int filter_width, int filter_height);
 	bool				getEdgeClipping();
 	int					getMural();
+	int					getAnotherGradient();
 
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
@@ -137,7 +138,7 @@ private:
 	bool	m_bEdgeClipping;
 	int		m_nResolution;
 	int		m_nMural;
-
+	int		m_nAnotherGradient;
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
 	static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE + 1];
@@ -182,6 +183,7 @@ private:
 	static void cb_resolution_slider(Fl_Widget* o, void* v);
 	static void cb_re_paint_button(Fl_Widget* o, void* v);
 	static void cb_mural(Fl_Widget* o, void* v);
+	static void cb_anotherGradient(Fl_Widget* o, void* v);
 };
 
 #endif

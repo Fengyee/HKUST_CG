@@ -331,6 +331,18 @@ void ImpressionistUI::cb_mural(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nMural = int(((Fl_Light_Button *)o)->value());
 	
 }
+void ImpressionistUI::cb_anotherGradient(Fl_Widget* o, void* v)
+{
+	if (int(((Fl_Light_Button *)o)->value()) == 1) {
+		ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
+		if (!pDoc->m_ucAnotherImg) {
+			((Fl_Light_Button *)o)->value(0);
+			fl_alert("There is no another image for setting gradient!");
+		}
+	}
+	((ImpressionistUI*)(o->user_data()))->m_nAnotherGradient = int(((Fl_Light_Button *)o)->value());
+
+}
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size
 // slider
@@ -710,6 +722,9 @@ bool ImpressionistUI::getEdgeClipping()
 {
 	return m_bEdgeClipping;
 }
+int ImpressionistUI::getAnotherGradient() {
+	return m_nAnotherGradient;
+}
 
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
@@ -820,7 +835,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;";
 	m_nResolution = 3;
 	m_nMural = 0;
-	
+	m_nAnotherGradient = 0;
 //	m_nFilterValue = "1, 1, 1;\n1, 1, 1;\n1, 1, 1;"
 
 
@@ -914,6 +929,10 @@ ImpressionistUI::ImpressionistUI() {
 	m_EdgeClippingButton->deactivate();
 
 	m_AnotherGradientButton = new Fl_Light_Button(240, 200, 150, 25, "&Another Gradient");
+	m_AnotherGradientButton->user_data((void*)(this));
+	m_AnotherGradientButton->callback(cb_anotherGradient);
+	m_AnotherGradientButton->value(m_nAnotherGradient);
+	m_AnotherGradientButton->deactivate();
 
 	m_SpacingSlider =  new Fl_Value_Slider(10, 240, 160, 25, "Spacing");
 	m_SpacingSlider->user_data((void*)(this));

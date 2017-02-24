@@ -145,6 +145,7 @@ void ImpressionistDoc::setBrushType(int type)
 		m_pUI->m_BrushLineWidthSlider->activate();
 		m_pUI->m_BrushAlphaSlider->activate();
 		m_pUI->m_EdgeClippingButton->activate();
+		m_pUI->m_AnotherGradientButton->activate();
 	default:
 		break;
 	}
@@ -236,6 +237,10 @@ int ImpressionistDoc::getRand()
 	return m_pUI->getRand();
 }
 
+int ImpressionistDoc::getAnotherGradient()
+{
+	return m_pUI->getAnotherGradient();
+}
 
 void ImpressionistDoc::recalEdgeImg()
 {

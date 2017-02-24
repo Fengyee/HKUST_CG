@@ -54,6 +54,7 @@ public:
 	int		getFilterWidth();
 	int		getResolution();
 	int		getMural();
+	int		getAnotherGradient();
 
 	char*	getImageName();					// get the current image name
 	

@@ -123,7 +123,13 @@ double ImpBrush::calcAngle(ImpressionistDoc* pDoc, const Point source_prev, cons
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				memcpy(pixel_cur, pDoc->GetOriginalPixel(source.x - 1 + i, source.y - 1 + j), 3);
+				if (pDoc->getAnotherGradient()) {
+					memcpy(pixel_cur, pDoc->GetAnotherPixel(source.x - 1 + i, source.y - 1 + j), 3);
+				}
+				else {
+					memcpy(pixel_cur, pDoc->GetOriginalPixel(source.x - 1 + i, source.y - 1 + j), 3);
+				}
+				
 				//glReadPixels(source.x-1+i, source.y-1+j, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel_cur);
 				if (source.x - 1 + j >= 0 && source.y - 1 + i >= 0 && source.x - 1 + j <= pDoc->m_nPaintWidth && source.y - 1 + i <= pDoc->m_nPaintHeight)
 				{
@@ -140,7 +146,12 @@ double ImpBrush::calcAngle(ImpressionistDoc* pDoc, const Point source_prev, cons
 				//std::cout << x_conv << y_conv << std::endl;
 			}
 		}
-		angle = atan((float)(y_conv) / (float)(x_conv));
+		if (x_conv != 0) {
+			angle = atan((float)(y_conv) / (float)(x_conv));
+		}
+		else {
+			angle = M_PI / 2;
+		}
 		//std::cout << std::endl << angle << std::endl;
 		//std::cout << x_conv << std::endl;
 		//std::cout << y_conv << std::endl;
